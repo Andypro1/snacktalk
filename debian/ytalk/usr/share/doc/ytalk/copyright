@@ -1,0 +1,30 @@
+This package was originally put together by Steve McIntyre <93sam@debian.org>.
+The packaging for Debian was continued by Philipp Kern <pkern@debian.org>.
+The packaging for Debian is now being written by Matthew Johnson <debian@matthew.ath.cx>
+
+The current sources are available from http://www.impul.se/ytalk/.
+
+Upstream Author: Andreas Kling <keso@impul.se>
+
+Copyright 1990, 1992, 1993 Britt Yenne
+
+As of version 3.3.0 ytalk is relicensed under the GPL which did not yet exist
+when ytalk was written in the first place.
+
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; version 2 dated June, 1991.
+
+   This package is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this package; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+
+On Debian GNU/Linux systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL-2'.
+

@@ -1,0 +1,14 @@
+Source: ytalk
+Section: net
+Priority: optional
+Maintainer: Matthew Johnson <mjj29@debian.org>
+Standards-Version: 3.7.2
+Build-Depends: debhelper (>= 5), libncurses5-dev, dpatch
+
+Package: ytalk
+Architecture: any
+Depends: ${shlibs:Depends}, talkd
+Description: enhanced talk program
+ Ytalk is a multi-user chat program. It works exactly like the UNIX talk
+ program and even communicates with the same talk daemons. The primary
+ advantage of ytalk is its ability to maintain multiple connections.

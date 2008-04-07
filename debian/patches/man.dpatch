@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## man.dpatch by  <mjj29@adonis.matthew.ath.cx>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix a manpage bug
+
+@DPATCH@
+
+--- ytalk-3.3.0.orig/docs/ytalk.1.in
++++ ytalk-3.3.0/docs/ytalk.1.in
+@@ -181,7 +181,7 @@
+ .PP
+ and he will be prompted for a yes/no answer.  This, in my opinion, is much
+ preferable to blitting the announcement message and messing up user B's
+-screen. The command-line option "-i" turns this off.
++screen. The command-line option "\-i" turns this off.
+ 
+ .SH RUNTIME OPTIONS
+ When you select Options off of the main menu, you are given the opportunity

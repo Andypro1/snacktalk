@@ -1,0 +1,271 @@
+ytalk (3.3.0-5) unstable; urgency=low
+
+  * Patches from Marc Glisse <marc.glisse@loria.fr>
+    - Honour SHELL and USER env vars (Closes: #455252)
+    - Fix logging of your own conversation (Closes: #455254)
+
+ -- Matthew Johnson <mjj29@debian.org>  Sun,  9 Dec 2007 15:41:23 +0000
+
+ytalk (3.3.0-4) unstable; urgency=low
+
+  * Adopt package (Closes: #418367).
+  * Use dpatch for patches outside debian/.
+  * Bumped standards version and compat version.
+
+ -- Matthew Johnson <mjj29@debian.org>  Wed,  5 Dec 2007 13:41:27 +0000
+
+ytalk (3.3.0-3) unstable; urgency=low
+
+  * Orphaned the package, maintainer field set accordingly.
+  * Created `debian/compat' instead of using DH_COMPAT in `debian/rules'.
+
+ -- Philipp Kern <pkern@debian.org>  Sun, 22 Apr 2007 11:05:27 +0200
+
+ytalk (3.3.0-2) unstable; urgency=low
+
+  * Updated FSF postal address in ``debian/copyright''
+  * Removed bashism out of ``debian/prerm''
+  * Bumped standards version
+
+ -- Philipp Kern <pkern@debian.org>  Wed, 21 Dec 2005 16:50:20 +0100
+
+ytalk (3.3.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Rewrote ``debian/copyright'' as ytalk is now licensed under the GNU GPL.
+
+ -- Philipp Kern <pkern@debian.org>  Sun, 13 Feb 2005 16:39:26 +0000
+
+ytalk (3.2.0-2) unstable; urgency=low
+
+  * Removed ``X support'' from ytalk's description. (Closes: #292890)
+
+ -- Philipp Kern <phil@philkern.de>  Mon, 31 Jan 2005 19:21:14 +0000
+
+ytalk (3.2.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Droping X support. It got nearly unusable and this will prepare the
+    users for the drop of the upstream support. (Closes: #190435)
+  * Added a fix from upstream to enable connections to users having
+    usernames longer than 8 characters. (Closes: #113644)
+  * Removed the dependency on netstd (<= 3.07-3) because it is no longer
+    available.
+  * Added a debian/watch file pointing to the upstream homepage.
+
+ -- Philipp Kern <phil@philkern.de>  Mon, 17 Jan 2005 20:13:13 +0100
+
+ytalk (3.1.6-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Security fix:
+    It turns out it was possible to write 44 bytes of arbitrary data to YTalk
+    memory when running the auto-invite daemon (off by default), due to a
+    nasty sprintf() call and a buffer overflow.
+
+    I didn't really investigate how much nastiness you might be able to
+    accomplish with these 44 bytes, but I did confirm that YTalk can be
+    crashed by anyone who knows the auto-invite daemon's TCP port number.
+    -- Andreas Kling <keso@klister.net>
+
+ -- Philipp Kern <phil@philkern.de>  Thu, 30 Dec 2004 09:56:37 +0000
+
+ytalk (3.1.5-1) unstable; urgency=low
+
+  * New upstream release.
+    - This release readds the lost "prompt before quit" patch submitted by
+      Colin Watson. (Closes: #278970)
+  * Changed debian/copyright as the maintainer changed with 3.1.3.
+  * Removed debian/conffiles as it gets build automagically.
+
+ -- Philipp Kern <phil@philkern.de>  Sat,  6 Nov 2004 19:36:36 +0100
+
+ytalk (3.1.4-1) unstable; urgency=low
+
+  * New upstream release.
+    - Adds a re-ring keystroke. (Closes: #38409)
+
+ -- Philipp Kern <phil@philkern.de>  Mon, 18 Oct 2004 19:01:07 +0200
+
+ytalk (3.1.3-2) unstable; urgency=low
+
+  * debian/rules: Install /etc/ytalkrc correctly. (Broke autobuilders.)
+
+ -- Philipp Kern <phil@philkern.de>  Sat, 02 Oct 2004 15:34:55 +0200
+
+ytalk (3.1.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Re-integrated lost fixes.
+  * Copy upstream changelog to /usr/share/doc.
+
+ -- Philipp Kern <phil@philkern.de>  Mon, 27 Sep 2004 18:23:32 +0000
+
+ytalk (3.1.2-4) unstable; urgency=low
+
+  * Description fixed. (Closes: #259624)
+  * Applied patches supplied by Andreas 'keso' Kling <keso@klister.net>:
+    ytalk-3.1.2-keso_curses_resize.patch,
+    ytalk-3.1.2-keso_no_debug_printf.patch
+
+ -- Philipp Kern <phil@philkern.de>  Fri, 30 Jul 2004 11:55:47 +0200
+
+ytalk (3.1.2-3) unstable; urgency=low
+
+  * Start using debhelper:
+    - Now supporting (via dh_strip) the nostrip option in DEB_BUILD_OPTIONS
+  * Removed dependency on netstd -- talkd replaces it completely, and netstd
+    was already not in woody.
+
+ -- Philipp Kern <phil@philkern.de>  Fri, 16 Apr 2004 20:02:30 +0200
+
+ytalk (3.1.2-2) unstable; urgency=medium
+
+  * Revert patch supporting username lengths 10 to 12, it hangs ytalk if you
+    use netkit-talkd (Reopens: #113644, Closes: #235283)
+
+ -- Philipp Kern <phil@philkern.de>  Fri, 16 Apr 2004 13:17:39 +0000
+
+ytalk (3.1.2-1) unstable; urgency=low
+
+  * Package taken over by Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+    and Philipp Kern <phil@philkern.de> (Closes: #218802)
+  * New upstream version (see /usr/share/doc/ytalk/changelog.gz for details).
+    (-x command line behaviour changed to *enable* the X interface
+    instead of disabling it.)
+  * Fixed a buffer overflow regarding a oversized $HOME when loading the
+    configuration file.
+  * Username length increased (Closes: #113644)
+  * Updated Standards-Version.
+
+ -- Philipp Kern <phil@philkern.de>  Tue,  6 Jan 2004 15:44:31 +0000
+
+ytalk (3.1.1-5) unstable; urgency=low
+
+  * Updated Standards-Version.
+  * Fixed multiple lintian warnings
+  * New Maintainer address
+  
+ -- Steve McIntyre <93sam@debian.org>  Sun, 13 Jan 2002 01:35:07 +0000
+
+ytalk (3.1.1-4) unstable; urgency=low
+
+  * Now prompts user before quitting - patch from Colin Watson <cjw44@flatline.org.uk>, fixes Bug #78258.
+  
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sat, 09 Dec 2000 18:51:13 +0000
+
+ytalk (3.1.1-3) unstable; urgency=low
+
+  * Rebuilt with ncurses5. Fixes: Bug#74502
+  
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 22 Oct 2000 18:38:44 +0100
+
+ytalk (3.1.1-1) unstable; urgency=low
+
+  * Reset handling of SIGCHLD for shells. Fixes Bugs #42625,2196.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 15 Aug 1999 20:48:32 +0100
+
+ytalk (3.1.1-0) unstable; urgency=low
+
+  * New upstream version with several bugs fixed. See changelog for more info.
+  * Now no longer crashes on resize of xterm. Fixes Bug#16334.
+  * Glibc 2.1 patch now introduced upstream, fixes Bug#31068.
+  * Now be more careful about checking/reporting of hostnames. Fixes Bug#2575.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 16 May 1999 23:14:32 +0100
+
+ytalk (3.1-0) unstable; urgency=low
+
+  * New upstream version.
+  * glibc2.1 patches added where now applicable and will be forwarded upstream. Fixes Bug#30168.
+  * ytalk now checks hostnames - Fixes Bug#2572.
+  * Bug#24166 should have been closed a long time ago - now done.
+  * Remaining open bugs will be forwarded to new upstream maintainer - Roger Espel Llima <espel@llaic.u-clermont1.fr>.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sat, 16 Jan 1999 23:55:46 +0000
+
+ytalk (3.0.3-6.1) frozen unstable; urgency=low
+
+  * non maintainer, sparc only upload
+  * don't include iovec.h anymore with glibc2.1
+
+ -- Christian Meder <meder@isr.uni-stuttgart.de>  Fri, 27 Nov 1998 11:40:06 +0100
+
+ytalk (3.0.3-6) frozen unstable; urgency=low
+
+  * Moved upstream version info from README.Debian to copyright file.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 01 Nov 1998 14:29:41 +0000
+
+ytalk (3.0.3-5) frozen unstable; urgency=low
+
+  * Recompiled against ncurses4 for slink.
+  * Added dependency on talkd or old netstd.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sat, 31 Oct 1998 09:26:41 +0000
+
+ytalk (3.0.3-4) frozen unstable; urgency=low
+
+  * Removed "-Werror" from Alpha compilation flags so it builds OK now. Fixes Bug#24166
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 18 Oct 1998 14:14:41 +0100
+
+ytalk (3.0.3-3) frozen unstable; urgency=medium
+
+  * Several fixes to "source uglyness". Fixes Bug#11797.
+  * Fixed man page reference to /usr/local/etc/ytalkrc.
+  * Updated Standards-Version.
+  * Removed debmake use.
+  * Other bugs being looked at, will probably not make it for 2.0 release.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 04 May 1998 21:12:33 +0100
+
+ytalk (3.0.3-2) frozen unstable; urgency=low
+
+  * New maintainer.
+
+ -- Steve McIntyre <stevem@chiark.greenend.org.uk>  Sun, 19 Apr 1998 15:22:33 +0100
+
+ytalk (3.0.3-1) unstable; urgency=low
+
+  * new upstream version 
+  * this version should be 8-bit-clean, closes bug 11798
+  # folded in various glibc/alpha patches from Debian 3.0.2 ytalk package.
+
+ -- Bdale Garbee <bdale@gag.com>  Wed, 17 Sep 1997 17:16:44 +0000
+
+ytalk (3.0.2-5) unstable; urgency=low
+
+  * libc6, closes bug 12642
+  * folded in changes for the alpha/glibc from Michael Dorman, closes bug 8827.
+
+ -- Bdale Garbee <bdale@gag.com>  Fri,  5 Sep 1997 02:07:10 -0600
+
+ytalk (3.0.2-4) unstable; urgency=low
+
+  * Fixed Bug 2699 regarding use of FQDN's.
+
+ -- Bdale Garbee <bdale@gag.com>  Sat, 2 Nov 1996 16:08:02 -0700
+
+ytalk (3.0.2-3) unstable; urgency=low
+
+  * Initial release by new maintainer in new package format.
+
+ -- Bdale Garbee <bdale@gag.com>  Tue, 29 Oct 1996 02:03:02 -0800
+
+ytalk (3.0.2-2) unstable; urgency=low
+
+  * Converted to ELF and ncurses
+  * updated packaging to latest standards
+  * Andrew still maintainer
+
+ -- Michael Nonweiler <mrn20@cam.ac.uk>  Thu, 23 May 1996 00:00:00 -0000
+
+ytalk (3.0.2-1) unstable; urgency=low
+
+  * Converted x and no_x packages into one package with depends
+    on xlibraries.
+
+ -- Andrew Howell <andrew@it.com.au>  Wed, 30 Aug 1995 00:00:00 -0000
+

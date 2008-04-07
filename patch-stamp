@@ -1,0 +1,12 @@
+debian/patches/man.dpatch (<mjj29@adonis.matthew.ath.cx>):
+  Fix a manpage bug
+
+debian/patches/self-log.dpatch (<mjj29@debian.org>):
+  self-log
+
+debian/patches/shell.dpatch (<mjj29@debian.org>):
+  shell
+
+debian/patches/user.dpatch (<mjj29@debian.org>):
+  user
+

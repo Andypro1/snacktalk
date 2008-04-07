@@ -1,0 +1,3 @@
+version=2
+
+http://impul.se/ytalk/download.php ytalk-(.*)\.tar\.gz

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec ../src/ytalk -v >/dev/null 2>&1

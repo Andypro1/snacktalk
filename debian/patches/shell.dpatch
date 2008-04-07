@@ -1,0 +1,32 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## shell.dpatch by  <mjj29@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: shell
+
+@DPATCH@
+
+--- ytalk-3.3.0/src/exec.c.orig	2007-12-09 16:08:47.800297534 +0000
++++ ytalk-3.3.0/src/exec.c	2007-12-09 16:10:06.302153849 +0000
+@@ -188,12 +188,15 @@
+ #endif
+ #endif
+ 
+-	pw = getpwuid(myuid);
+-	if (pw != NULL) {
+-		shell = pw->pw_shell;
+-	} else {
+-		shell = "/bin/sh";
+-	}
++   pw = getpwuid(myuid);
++   shell=getenv("SHELL");
++   if(shell==NULL){
++      if (pw != NULL) {
++         shell = pw->pw_shell;
++      } else {
++         shell = "/bin/sh";
++      }
++   }
+ 
+ 	calculate_size(&prows, &pcols);
+ 

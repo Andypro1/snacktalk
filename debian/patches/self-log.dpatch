@@ -1,0 +1,23 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## self-log.dpatch by  <mjj29@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: self-log
+
+@DPATCH@
+
+--- ytalk-3.3.0/src/comm.c.orig	2007-12-09 16:06:51.797555519 +0000
++++ ytalk-3.3.0/src/comm.c	2007-12-09 16:07:37.798642716 +0000
+@@ -1361,6 +1361,12 @@
+ 							*n = c[j];
+ 					}
+ 					j = (n - nbuf);
++               if (me->output_fd > 0)
++                  if (write(me->output_fd, nbuf, (size_t)j) <= 0) {
++                     show_error("write to user output file failed");
++                     close(me->output_fd);
++                     me->output_fd = 0;
++                  }
+ 					show_input(me, nbuf, j);
+ 					send_users(user, c, i, nbuf, j);
+ 				}

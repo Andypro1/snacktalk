@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## user.dpatch by  <mjj29@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: user
+
+@DPATCH@
+
+--- ytalk-3.3.0/src/user.c	2007-12-09 16:08:26.799801039 +0000
++++ ytalk-3.3.0/src/user.c.orig	2007-12-09 16:10:39.302934384 +0000
+@@ -46,6 +46,8 @@
+ 	ylong uid;
+ {
+ 	register struct passwd *pw;
++   char* c;
++   if ((c = getenv("USER")) != NULL) return c;
+ 	passwd_opened = 1;
+ 	if ((pw = getpwuid(uid)) == NULL)
+ 		return NULL;

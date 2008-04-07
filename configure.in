@@ -1,0 +1,119 @@
+dnl configure.in for YTalk
+dnl Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+
+AC_INIT([YTalk], [3.3.0])
+AC_CONFIG_SRCDIR(src/main.c)
+
+AM_INIT_AUTOMAKE
+
+AC_CONFIG_HEADER(config.h)
+
+dnl Do some system detection. Don't expand this without a good reason.
+host=`uname -s`
+case "$host" in
+*SunOS*)
+  SYSTEM_DEFS="-DYTALK_SUNOS"
+  ;;
+*HP-UX*)
+  SYSTEM_DEFS="-DYTALK_HPUX"
+  ;;
+esac
+AC_SUBST(SYSTEM_DEFS)
+
+AC_DEFINE_DIR([sysconfdir], [sysconfdir], [sysconfdir])
+AC_DEFINE_UNQUOTED(SYSTEM_YTALKRC, ["${sysconfdir}/ytalkrc"], ["Location of default ytalkrc file"])
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+dnl Sanity
+AC_CHECK_SIZEOF(long)
+AC_CHECK_SIZEOF(u_int)
+
+ytalk_cv_curses=/usr
+AC_ARG_WITH(curses, AC_HELP_STRING([--with-curses=DIR], [Where curses is installed]),
+	[if test $withval != yes; then
+		ytalk_cv_curses=$withval
+	fi
+	if test x$ytalk_cv_curses != x/usr; then
+		LDFLAGS="-L${ytalk_cv_curses}/lib $LDFLAGS"
+		CPPFLAGS="$CPPFLAGS -I${ytalk_cv_curses}/include"
+	fi])
+
+AC_CHECK_LIB(ncurses, initscr,
+	[LIBS="$LIBS -lncurses"
+	if test x$ytalk_cv_curses = x/usr -a -d /usr/include/ncurses; then
+		CPPFLAGS="$CPPFLAGS -I/usr/include/ncurses"
+	fi
+	AC_CHECK_HEADERS(ncurses.h)],
+	[CF_CURSES_LIBS])
+
+dnl Check for keypad()
+AC_CHECK_LIB(ncurses, keypad,
+	[AC_DEFINE(HAVE_KEYPAD, 1, [Define to 1 if you have keypad()])],
+[AC_CHECK_LIB(curses, keypad,
+	[AC_DEFINE(HAVE_KEYPAD, 1, [Define to 1 if you have keypad()])],
+[])])
+
+dnl Look for termios, and if that fails, try sgtty.
+AC_CHECK_FUNC(tcgetattr, [\
+  AC_CHECK_HEADERS(termios.h,, no_termios=1)], no_termios=1)
+if test "x$no_termios" = "x1" ; then
+  AC_CHECK_HEADERS(sgtty.h,, AC_MSG_ERROR(Cannot find either termios or sgtty))
+fi
+
+dnl See if we want debugging output.
+AC_ARG_ENABLE([debug], AC_HELP_STRING([--enable-debug], [enable debugging]))
+if test "${enable_debug:-no}" != "no"; then
+    AC_DEFINE(YTALK_DEBUG, 1, [Define to 1 to enable debugging output.])
+fi
+
+dnl Some systems need extra libraries for sockets and dns...
+AC_CHECK_FUNC(socket,,AC_CHECK_LIB(socket, socket,, [AC_MSG_ERROR(Can't compile without socket)]))
+AC_CHECK_FUNC(gethostbyname,,AC_CHECK_LIB(nsl, gethostbyname,, [AC_MSG_ERROR(Can't compile without gethostbyname)]))
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(fcntl.h netdb.h netinet/in.h sys/ioctl.h sys/time.h unistd.h stropts.h)
+AC_CHECK_HEADERS(iovec.h sys/uio.h stdlib.h string.h sys/param.h arpa/inet.h sys/stat.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_SIZE_T
+AC_TYPE_SIGNAL
+AC_HEADER_TIME
+AC_TYPE_UID_T
+
+AC_CHECK_TYPE([ssize_t], , [AC_DEFINE(ssize_t, int, [the signed version of size_t])])
+
+AC_CHECK_TYPE([socklen_t], [AC_DEFINE(HAVE_SOCKLEN_T, 1, [Define to 1 if you have the `socklen_t` type])], [], [
+	#include <sys/types.h>
+	#include <sys/socket.h>])
+
+dnl Check for openpty() and util.h
+AC_CHECK_HEADERS(util.h)
+AC_CHECK_FUNCS(openpty,,
+	[AC_CHECK_LIB(util, openpty, [AC_DEFINE(HAVE_OPENPTY)] [LIBS="$LIBS -lutil"])
+])
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_CHECK_FUNCS(putenv strerror ttyname ptsname grantpt unlockpt)
+AC_CHECK_FUNCS(setsid tcflush snprintf)
+AC_CHECK_FUNCS(sigprocmask sigsetmask sighold, break)
+
+AC_CHECK_FUNC(gethostname,,AC_MSG_ERROR(Can't run without gethostname))
+AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
+
+AC_OUTPUT(
+	docs/Makefile
+	docs/ytalk.1
+	test/Makefile
+	src/Makefile
+	Makefile
+)
