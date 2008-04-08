@@ -130,9 +130,9 @@ init_term()
 	/* set me up a terminal */
 
 #ifdef HAVE_SNPRINTF
-	snprintf(tmpstr, sizeof(tmpstr), "YTalk version %s", PACKAGE_VERSION);
+	snprintf(tmpstr, sizeof(tmpstr), "Snacktalk version %s", PACKAGE_VERSION);
 #else
-	sprintf(tmpstr, "YTalk version %s", PACKAGE_VERSION);
+	sprintf(tmpstr, "Snacktalk version %s", PACKAGE_VERSION);
 #endif
 	if (open_term(me, tmpstr) < 0) {
 		end_term();

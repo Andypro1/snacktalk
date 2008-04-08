@@ -151,6 +151,7 @@ curses_redraw()
 {
 	register ywin *w;
 	register int row, wins, wsize;
+	int curwin;
 
 	/* kill old windows */
 
@@ -174,7 +175,9 @@ curses_redraw()
 	clear();
 	refresh();
 	row = 0;
+	curwin = 0;
 	for (w = head; w; w = w->next) {
+		/*
 		if (w->next) {
 			make_win(w, wsize - 1, COLS, row + 1, 0);
 			resize_win(w->user, wsize - 1, COLS);
@@ -182,8 +185,23 @@ curses_redraw()
 			make_win(w, LINES - row - 2, COLS, row + 1, 0);
 			resize_win(w->user, LINES - row - 2, COLS);
 		}
+		*/
+
+		//  2008-04-08 Andypro: Improved algorithm for divvying up the terminal
+		if(curwin < wins - (LINES % wins)) { //do not allocate an extra line
+		   make_win(w, (LINES / wins)-1, COLS, row+1, 0);
+		   resize_win(w->user, (LINES / wins)-1, COLS);
+		   row += (LINES / wins);
+		}
+		else { //give this user one of the leftover lines in LINES%wins
+		   make_win(w, (LINES / wins), COLS, row+1, 0);
+		   resize_win(w->user, (LINES / wins), COLS);
+		   row += (LINES / wins)+1;
+		}
+
 		draw_title(w);
-		row += wsize;
+		curwin++;
+		//row += wsize;
 		refresh();
 		wrefresh(w->win);
 	}
