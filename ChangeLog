@@ -1,5 +1,14 @@
-YTalk: Multi-user talk client
-For news and updates, visit http://www.impul.se/ytalk/
+Snacktalk: Multi-user talk client
+	- Based off of YTalk 3.3.0
+For news and updates, visit http://snacktalk.snackbox.org/
+
+version 3.3.1
+	Changes:
+	* autoimport/autoinvite options are now forced on by default.
+	* Algorithm used to determine 'window' sizes has been updated to
+	  be more fair.
+	* Renamed application to "Snacktalk".
+	* Now looks for config in etc/snacktalkrc and ~/.snacktalkrc.
 
 version 3.3.0
 	New features:

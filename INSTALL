@@ -1,11 +1,11 @@
 
-			Installation Procedure for Ytalk
+			Installation Procedure for Snacktalk
 
 
 0) Preparation
 
-To build and install Ytalk, you need to unpack the archive.  Since you're
-reading this text, you have presumabley already done that.  Ytalk uses
+To build and install Snacktalk, you need to unpack the archive.  Since you're
+reading this text, you have presumabley already done that.  Snacktalk uses
 GNU autoconf now for configuration; those of you familiar with compiling
 GNU utilities will feel quite at home.
 
@@ -17,7 +17,7 @@ Short & sweet:
 
 1) Configuration
 
-To configure Ytalk, run the `configure' script provided with the
+To configure Snacktalk, run the `configure' script provided with the
 distribution.  You may use all the standard arguments configure scripts
 take.  The most important ones are:
 
@@ -53,15 +53,16 @@ files, but it is useful to have a look at things you can change there.
 
 2) Compilation
 
-To compile the program, type make and cross your fingers.  YTalk is
+To compile the program, type make and cross your fingers.  Snacktalk is
 fairly portable, so this _should_ work out of the box.  If it doesn't,
-please mail me with all the details at <keso@impul.se>.
+please mail the maintainers using the contact information listed at the
+website above.
 
-After the compilation, a ready to use `ytalk' executable should reside
+After the compilation, a ready to use `snacktalk' executable should reside
 in the distribution directory.  Other than missing its system-wide
 configuration file, it'll be all ready to use.
 
-This is also the right moment to look at the file `ytalkrc', which will
+This is also the right moment to look at the file `snacktalkrc', which will
 be installed as the system-wide configuration file.
 
 If you change any options in the Makefile, please run "make clean"
@@ -70,28 +71,29 @@ before recompiling.  If you change the environment variables to run
 
 3) Installation
 
-Use `make install' to install Ytalk to the directories specified to
+Use `make install' to install Snacktalk to the directories specified to
 configure (/usr/local/* by default).
 
-The standard installation process will copy the ytalk binary to
+The standard installation process will copy the Snacktalk binary to
 /usr/local/bin, the man page to /usr/local/man/man1, and the system
-ytalkrc to /usr/local/etc.  You can customize the directories either
+snacktalkrc to /usr/local/etc.  You can customize the directories either
 through the configuration process or making the necessary changes in the
 Makefile.
 
-To delete the files created by Ytalk installation, you can use make
+To delete the files created by Snacktalk installation, you can use make
 uninstall.
 
-4) Acknowledgements (Roger Espel Llima)
+4) Acknowledgements
 
-Previous YTalk versions were maintained by Britt Yenne; since version
-3.0pl2 was released quite a few years ago, I assume he has lost interest
-in Ytalk, so I've been maintaining it in a "low-key" way (mostly just
-fixing bugs and adding minor things, now autoconf-ing it, and
-integrating people's bug fixes).
+YTalk was maintained by Andreas Kling from version 3.1.3 to version 
+3.3.0. At the time of this writing, YTalk development has become very
+fractured, with no obvious single development source. Most websites
+which did exist (and are still linked to as a 'current' maintainer) are
+now offline. Overall, YTalk itself appears pretty dead. Thus, we have
+taken over 'development' in much the same way R. Llima and A. Kling
+did... we will be integrating any bug fixes we develop or that are given
+to us and implementing some pretty simple features.
 
-Most of these installation instructions are taken word-for-word from the
-`INSTALL' file that comes with GNU Wget.  This means that, unlike the
-rest of the YTalk package (which is freely copyable as long as the
-copyright notices are kept in the sources), this file is (probably)
-covered by the GNU General Public License version 2.
+The AUTHORS file gives a much more complete list of people who have 
+contributed to this application through the years, and the ChangeLog 
+file gives a pretty detailed list of who did what when.

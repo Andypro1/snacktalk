@@ -1,5 +1,13 @@
 
-				YTalk
+			     Snacktalk
+
+Snacktalk is a fork of YTalk 3.3.0 as released by Andreas Kling. The 
+YTalk 3.3.0 README is below.
+
+The current point of contact for Snacktalk is 
+<http://snacktalk.snackbox.org/>.
+
+-------------------------------------------------------------------------
 
 YTalk is a compatible replacement for the Unix talk(1) program, which
 adds a number of features.  Mainly, it can talk to more than one person
