@@ -331,6 +331,9 @@ read_ytalkrc()
 	}
 
 	/* set all default flags */
+	/* NuclearDog ~ This should force AUTOINVITE and AUTOIMPORT on by default. */
+	def_flags |= FL_INVITE;
+	def_flags |= FL_IMPORT;
 	for (u = user_list; u != NULL; u = u->unext)
 		if (!(u->flags & FL_LOCKED))
 			u->flags = def_flags;
