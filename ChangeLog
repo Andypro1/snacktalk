@@ -4,11 +4,14 @@ For news and updates, visit http://snacktalk.snackbox.org/
 
 version 3.3.1
 	Changes:
-	* autoimport/autoinvite options are now forced on by default.
+	* autoimport/autoinvite options are now forced on by default. (This is
+	  due to Snacktalk not properly recognizing these options being set in
+	  the ~/.snacktalkrc file and is a pre-existing issue for us from
+	  YTalk 3.3.0.) ~ ND
 	* Algorithm used to determine 'window' sizes has been updated to
-	  be more fair.
-	* Renamed application to "Snacktalk".
-	* Now looks for config in etc/snacktalkrc and ~/.snacktalkrc.
+	  be more fair. ~ AP
+	* Renamed application to "Snacktalk". ~ ND
+	* Now looks for config in etc/snacktalkrc and ~/.snacktalkrc. ~ ND
 
 version 3.3.0
 	New features:
