@@ -22,7 +22,7 @@
 #include "header.h"
 #include "mem.h"
 
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 /* some statistical accumulators */
 unsigned int bad_free = 0;
 unsigned int bad_realloc = 0;
@@ -121,13 +121,13 @@ change_area(list, addr, new_addr, size)
 	show_error("Reallocation failed: Not in allocation list");
 	bad_realloc++;
 }
-#endif				/* YTALK_DEBUG */
+#endif				/* SNACKTALK_DEBUG */
 
 /*
  * Allocate memory
  */
 yaddr
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 real_get_mem(n, line, file)
 	size_t n;
 	int line;
@@ -142,7 +142,7 @@ get_mem(n)
 		show_error("malloc() failed");
 		bail(YTE_NO_MEM);
 	}
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 	glist = add_area(glist, out, n, line, file);
 #endif
 	return out;
@@ -151,7 +151,7 @@ get_mem(n)
 /*
  * Free and clear memory
  */
-#ifndef YTALK_DEBUG
+#ifndef SNACKTALK_DEBUG
 void
 free_mem(addr)
 	yaddr addr;
@@ -180,13 +180,13 @@ real_free_mem(addr, line, file)
 		bad_free++;
 	}
 }
-#endif				/* YTALK_DEBUG */
+#endif				/* SNACKTALK_DEBUG */
 
 /*
  * Reallocate memory
  */
 yaddr
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 real_realloc_mem(p, n, line, file)
 	yaddr p;
 	size_t n;
@@ -200,7 +200,7 @@ realloc_mem(p, n)
 {
 	yaddr out;
 	if (p == NULL) {
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 		realloc_null++;
 		return real_get_mem(n, line, file);
 #else
@@ -211,13 +211,13 @@ realloc_mem(p, n)
 		show_error("realloc() failed");
 		bail(YTE_NO_MEM);
 	}
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 	change_area(glist, p, out, n);
 #endif
 	return out;
 }
 
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 /*
  * Clear all memory
  */
@@ -244,4 +244,4 @@ clear_all()
 	fprintf(stderr, "realloc_mem(NULL) calls: %u\n", realloc_null);
 	fprintf(stderr, "Leaked allocations:      %u\n", leaked);
 }
-#endif				/* YTALK_DEBUG */
+#endif				/* SNACKTALK_DEBUG */

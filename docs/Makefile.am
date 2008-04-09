@@ -1,4 +1,4 @@
 man_MANS = \
-	ytalk.1
+	snacktalk.1
 
 EXTRA_DIST = $(man_MANS)

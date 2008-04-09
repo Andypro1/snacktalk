@@ -1,6 +1,6 @@
-bin_PROGRAMS = ytalk
+bin_PROGRAMS = snacktalk
 
-ytalk_SOURCES = \
+snacktalk_SOURCES = \
 	main.c \
 	term.c \
 	user.c \

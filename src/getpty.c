@@ -29,7 +29,7 @@
 # define SIGCLD SIGCHLD
 #endif
 
-#if !defined(HAVE_OPENPTY) || defined(YTALK_TEST)
+#if !defined(HAVE_OPENPTY) || defined(SNACKTALK_TEST)
 int
 getpty(name)
 	char *name;
@@ -54,9 +54,9 @@ getpty(name)
 		signal(SIGCHLD, sigchld);
 		if (r == 0 && tt != NULL) {
 			strcpy(name, tt);
-#ifdef YTALK_SUNOS
+#ifdef SNACKTALK_SUNOS
 			needtopush = 1;
-#endif /* YTALK_SUNOS */
+#endif /* SNACKTALK_SUNOS */
 			return pty;
 		}
 	}
@@ -100,5 +100,5 @@ getpty(name)
 	errno = ENOENT;
 	return -1;
 }
-#endif /* !HAVE_OPENPTY || YTALK_TEST */
+#endif /* !HAVE_OPENPTY || SNACKTALK_TEST */
 

@@ -35,7 +35,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 subdir = docs
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/ytalk.1.in
+	$(srcdir)/snacktalk.1.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac-curses.m4 \
 	$(top_srcdir)/m4/ac-defdir.m4 $(top_srcdir)/configure.in
@@ -43,7 +43,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = ytalk.1
+CONFIG_CLEAN_FILES = snacktalk.1
 depcomp =
 am__depfiles_maybe =
 SOURCES =
@@ -126,7 +126,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 man_MANS = \
-	ytalk.1
+	snacktalk.1
 
 EXTRA_DIST = $(man_MANS)
 all: all-am
@@ -161,7 +161,7 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-ytalk.1: $(top_builddir)/config.status $(srcdir)/ytalk.1.in
+snacktalk.1: $(top_builddir)/config.status $(srcdir)/snacktalk.1.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 uninstall-info-am:
 install-man1: $(man1_MANS) $(man_MANS)

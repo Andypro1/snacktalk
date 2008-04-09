@@ -1,9 +1,9 @@
-dnl configure.in for YTalk
+dnl configure.in for Snacktalk
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT([YTalk], [3.3.0])
+AC_INIT([Snacktalk], [3.3.1])
 AC_CONFIG_SRCDIR(src/main.c)
 
 AM_INIT_AUTOMAKE
@@ -14,16 +14,16 @@ dnl Do some system detection. Don't expand this without a good reason.
 host=`uname -s`
 case "$host" in
 *SunOS*)
-  SYSTEM_DEFS="-DYTALK_SUNOS"
+  SYSTEM_DEFS="-DSNACKTALK_SUNOS"
   ;;
 *HP-UX*)
-  SYSTEM_DEFS="-DYTALK_HPUX"
+  SYSTEM_DEFS="-DSNACKTALK_HPUX"
   ;;
 esac
 AC_SUBST(SYSTEM_DEFS)
 
 AC_DEFINE_DIR([sysconfdir], [sysconfdir], [sysconfdir])
-AC_DEFINE_UNQUOTED(SYSTEM_YTALKRC, ["${sysconfdir}/ytalkrc"], ["Location of default ytalkrc file"])
+AC_DEFINE_UNQUOTED(SYSTEM_SNACKTALKRC, ["${sysconfdir}/snacktalkrc"], ["Location of default snacktalkrc file"])
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -35,19 +35,19 @@ dnl Sanity
 AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(u_int)
 
-ytalk_cv_curses=/usr
+snacktalk_cv_curses=/usr
 AC_ARG_WITH(curses, AC_HELP_STRING([--with-curses=DIR], [Where curses is installed]),
 	[if test $withval != yes; then
-		ytalk_cv_curses=$withval
+		snacktalk_cv_curses=$withval
 	fi
-	if test x$ytalk_cv_curses != x/usr; then
-		LDFLAGS="-L${ytalk_cv_curses}/lib $LDFLAGS"
-		CPPFLAGS="$CPPFLAGS -I${ytalk_cv_curses}/include"
+	if test x$snacktalk_cv_curses != x/usr; then
+		LDFLAGS="-L${snacktalk_cv_curses}/lib $LDFLAGS"
+		CPPFLAGS="$CPPFLAGS -I${snacktalk_cv_curses}/include"
 	fi])
 
 AC_CHECK_LIB(ncurses, initscr,
 	[LIBS="$LIBS -lncurses"
-	if test x$ytalk_cv_curses = x/usr -a -d /usr/include/ncurses; then
+	if test x$snacktalk_cv_curses = x/usr -a -d /usr/include/ncurses; then
 		CPPFLAGS="$CPPFLAGS -I/usr/include/ncurses"
 	fi
 	AC_CHECK_HEADERS(ncurses.h)],
@@ -70,7 +70,7 @@ fi
 dnl See if we want debugging output.
 AC_ARG_ENABLE([debug], AC_HELP_STRING([--enable-debug], [enable debugging]))
 if test "${enable_debug:-no}" != "no"; then
-    AC_DEFINE(YTALK_DEBUG, 1, [Define to 1 to enable debugging output.])
+    AC_DEFINE(SNACKTALK_DEBUG, 1, [Define to 1 to enable debugging output.])
 fi
 
 dnl Some systems need extra libraries for sockets and dns...
@@ -112,7 +112,7 @@ AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
 
 AC_OUTPUT(
 	docs/Makefile
-	docs/ytalk.1
+	docs/snacktalk.1
 	test/Makefile
 	src/Makefile
 	Makefile

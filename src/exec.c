@@ -92,7 +92,7 @@ setsid()
 }
 #endif
 
-#if defined(USE_DEV_PTMX) && defined(YTALK_SUNOS)
+#if defined(USE_DEV_PTMX) && defined(SNACKTALK_SUNOS)
 int needtopush = 0;
 #endif
 
@@ -221,7 +221,7 @@ execute(command)
 		if ((fd = open(name, O_RDWR)) < 0)
 			exit(-1);
 
-#if defined(USE_DEV_PTMX) && defined(YTALK_SUNOS)
+#if defined(USE_DEV_PTMX) && defined(SNACKTALK_SUNOS)
 # if defined(HAVE_STROPTS_H) && defined(I_PUSH)
 		/*
 		 * This will really mess up the shell on OSF1/Tru64 UNIX,
@@ -253,9 +253,9 @@ execute(command)
 		putenv("TERM=vt100");
 # endif
 # ifdef HAVE_SNPRINTF
-		snprintf(yvenv, sizeof(yvenv), "YTALK_VERSION=%s", PACKAGE_VERSION);
+		snprintf(yvenv, sizeof(yvenv), "SNACKTALK_VERSION=%s", PACKAGE_VERSION);
 # else
-		sprintf(yvenv, "YTALK_VERSION=%s", PACKAGE_VERSION);
+		sprintf(yvenv, "SNACKTALK_VERSION=%s", PACKAGE_VERSION);
 # endif
 		putenv(yvenv);
 #endif

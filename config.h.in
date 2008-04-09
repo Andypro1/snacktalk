@@ -153,8 +153,8 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
-/* "Location of default ytalkrc file" */
-#undef SYSTEM_YTALKRC
+/* "Location of default snacktalkrc file" */
+#undef SYSTEM_SNACKTALKRC
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
@@ -163,7 +163,7 @@
 #undef VERSION
 
 /* Define to 1 to enable debugging output. */
-#undef YTALK_DEBUG
+#undef SNACKTALK_DEBUG
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t

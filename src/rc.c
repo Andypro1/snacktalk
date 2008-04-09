@@ -307,8 +307,8 @@ read_ytalkrc()
 	char *home, *fname;
 	struct passwd *pw;
 
-#ifdef SYSTEM_YTALKRC
-	read_rcfile(SYSTEM_YTALKRC);
+#ifdef SYSTEM_SNACKTALKRC
+	read_rcfile(SYSTEM_SNACKTALKRC);
 #endif
 
 	/* read the user's ytalkrc file */
@@ -322,9 +322,9 @@ read_ytalkrc()
 	if (home != NULL) {
 		fname = get_mem(strlen(home) + 10);
 #ifdef HAVE_SNPRINTF
-		snprintf(fname, strlen(home) + 10, "%s/.ytalkrc", home);
+		snprintf(fname, strlen(home) + 10, "%s/.snacktalkrc", home);
 #else
-		sprintf(fname, "%s/.ytalkrc", home);
+		sprintf(fname, "%s/.snacktalkrc", home);
 #endif
 		read_rcfile(fname);
 		free_mem(fname);

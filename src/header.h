@@ -23,7 +23,7 @@
 #include <sys/types.h>
 #include <sys/param.h>
 
-#ifdef YTALK_HPUX
+#ifdef SNACKTALK_HPUX
 # define _XOPEN_SOURCE_EXTENDED
 # include <sys/socket.h>
 # undef _XOPEN_SOURCE_EXTENDED

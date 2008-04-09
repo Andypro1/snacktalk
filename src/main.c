@@ -43,7 +43,7 @@ bail(n)
 		}
 	end_term();
 	free_users();
-#ifdef YTALK_DEBUG
+#ifdef SNACKTALK_DEBUG
 	clear_all();
 #endif
 	exit(n == YTE_SUCCESS_PROMPT ? YTE_SUCCESS : n);

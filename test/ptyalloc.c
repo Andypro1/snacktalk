@@ -1,6 +1,6 @@
 /* ptyalloc.c
  *
- * Test the pseudo-terminal allocation methods in YTalk.
+ * Test the pseudo-terminal allocation methods in Snacktalk.
  */
 
 #include "config.h"
