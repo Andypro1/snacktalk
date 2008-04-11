@@ -45,8 +45,6 @@ user_name(uid)
 	ylong uid;
 {
 	register struct passwd *pw;
-   char* c;
-   if ((c = getenv("USER")) != NULL) return c;
 	passwd_opened = 1;
 	if ((pw = getpwuid(uid)) == NULL)
 		return NULL;

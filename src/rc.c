@@ -320,9 +320,10 @@ read_ytalkrc()
 			home = pw->pw_dir;
 	}
 	if (home != NULL) {
-		fname = get_mem(strlen(home) + 10);
+		//  2008-04-11 Andypro: Fixed buffer length to properly load rc file
+		fname = get_mem(strlen(home) + 14);
 #ifdef HAVE_SNPRINTF
-		snprintf(fname, strlen(home) + 10, "%s/.snacktalkrc", home);
+		snprintf(fname, strlen(home) + 14, "%s/.snacktalkrc", home);
 #else
 		sprintf(fname, "%s/.snacktalkrc", home);
 #endif

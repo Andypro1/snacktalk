@@ -1361,12 +1361,6 @@ my_input(user, buf, len)
 							*n = c[j];
 					}
 					j = (n - nbuf);
-               if (me->output_fd > 0)
-                  if (write(me->output_fd, nbuf, (size_t)j) <= 0) {
-                     show_error("write to user output file failed");
-                     close(me->output_fd);
-                     me->output_fd = 0;
-                  }
 					show_input(me, nbuf, j);
 					send_users(user, c, i, nbuf, j);
 				}

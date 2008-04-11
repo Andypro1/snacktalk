@@ -188,15 +188,12 @@ execute(command)
 #endif
 #endif
 
-   pw = getpwuid(myuid);
-   shell=getenv("SHELL");
-   if(shell==NULL){
-      if (pw != NULL) {
-         shell = pw->pw_shell;
-      } else {
-         shell = "/bin/sh";
-      }
-   }
+	pw = getpwuid(myuid);
+	if (pw != NULL) {
+		shell = pw->pw_shell;
+	} else {
+		shell = "/bin/sh";
+	}
 
 	calculate_size(&prows, &pcols);
 
