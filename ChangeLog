@@ -2,6 +2,10 @@ Snacktalk: Multi-user talk client
 	- Based off of YTalk 3.3.0
 For news and updates, visit http://snacktalk.snackbox.org/
 
+version 3.3.2
+	Bug fixes:
+	* Fixed buffer overrun error in snacktalk.rc config loader
+
 version 3.3.1
 	Changes:
 	* autoimport/autoinvite options are now forced on by default. (This is
