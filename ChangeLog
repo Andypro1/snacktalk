@@ -4,7 +4,7 @@ For news and updates, visit http://snacktalk.snackbox.org/
 
 version 3.3.2
 	Bug fixes:
-	* Fixed buffer overrun error in snacktalk.rc config loader
+	* Fixed buffer overrun error in ~snacktalk.rc config loader ~ AP
 
 version 3.3.1
 	Changes:
