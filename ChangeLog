@@ -12,9 +12,9 @@ version 3.3.1
 	  due to Snacktalk not properly recognizing these options being set in
 	  the ~/.snacktalkrc file and is a pre-existing issue for us from
 	  YTalk 3.3.0.) ~ ND
-	* Algorithm used to determine 'window' sizes has been updated to
+	* Algorithm used to determine window sizes has been updated to
 	  be more fair. ~ AP
-	* Renamed application to "Snacktalk". ~ ND
+	* Renamed application to "Snacktalk." ~ ND
 	* Now looks for config in etc/snacktalkrc and ~/.snacktalkrc. ~ ND
 
 version 3.3.0
@@ -26,7 +26,7 @@ version 3.3.0
 	* YTalk is now released under the GNU GPL
 	* The X11 interface has been removed since no one was using it
 	  and it had grown way too outdated
-	* Unidentified talk clients are now called "BSD talk",
+	* Unidentified talk clients are now called "BSD talk,"
 	  since talk(1) originally appeared in 4.2BSD.
 	* Moved to GNU automake
 	* Re-indented sources with hard tabs
@@ -39,7 +39,7 @@ version 3.3.0
 
 version 3.2.0
 	New features:
-	* Added far-right "stomping", fixes procps top(1) among other things
+	* Added far-right "stomping," fixes procps top(1) among other things
 	* Separated handling of CR and LF, makes a lot of programs work better
 	* Added support for 'G' escape sequence used by Gentoo's init scripts
 	* Added "escape-yesno" patch from FreeBSD that optionally requires
@@ -184,4 +184,4 @@ version 3.1beta1
 
 	Bug fixes:
 	* Fixed annoying bug with UDP handling under Linux (that's where the
-	  spurious "no talk daemon" messages were coming from!)
+	  spurious "no talk Daemon" messages were coming from!)
