@@ -39,7 +39,7 @@ version 3.3.0
 
 version 3.2.0
 	New features:
-	* Added far-right "stomping," fixes procps top(1) among other things
+	* Added far-right "stomping" - fixes procps top(1) among other things
 	* Separated handling of CR and LF, makes a lot of programs work better
 	* Added support for 'G' escape sequence used by Gentoo's init scripts
 	* Added "escape-yesno" patch from FreeBSD that optionally requires
