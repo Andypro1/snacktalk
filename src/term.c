@@ -939,7 +939,13 @@ draw_box(user, height, width, c)
 	}
 	if (height < user->t_rows) {
 		move_term(user, height, 0);
-		for (i = 0; i < width; i++)
+
+		register char *t;
+
+		for(t = user->user_name; *t; ++t)
+			addch(*t);
+
+		for (i = (int)strlen(user->user_name); i < width; i++)
 			addch_term(user, c);
 		if (width < user->t_cols)
 			addch_term(user, c);
@@ -951,6 +957,40 @@ draw_box(user, height, width, c)
 		}
 	}
 }
+/*
+static void
+draw_blame_line(user, width)
+	ywin *w;
+{
+	register int pad, x;
+	register char *t;
+
+	if ((int) strlen(w->title) > w->width) {
+		for (x = 0; x < w->width; x++)
+			addch('-');
+		return;
+	}
+	pad = (w->width - strlen(w->title)) / 2;
+	move(w->row - 1, w->col);
+	x = 0;
+	for (; x < pad - 2; x++)
+		addch('-');
+	if (pad >= 2) {
+		addch('=');
+		addch(' ');
+		x += 2;
+	}
+	for (t = w->title; *t && x < w->width; x++, t++)
+		addch(*t);
+	if (pad >= 2) {
+		addch(' ');
+		addch('=');
+		x += 2;
+	}
+	for (; x < w->width; x++)
+		addch('-');
+}
+*/
 
 /*
  * Set the virtual terminal size, ie: the display region.
@@ -989,7 +1029,8 @@ set_win_region(user, height, width)
 		clreos_term(user);
 		user->region_set = 1;
 	}
-	draw_box(user, height, width, '%');
+	draw_box(user, height, width, '%');	//  ap:  This seems to write percents to the entire window region.  Percents left over will only be outside
+										//  the usable display region based on the fact that the rows/cols gets distributed to each user on all resizes.
 
 	/* set the display region */
 
@@ -998,7 +1039,7 @@ set_win_region(user, height, width)
 	user->sc_top = 0;
 	user->sc_bot = height - 1;
 	move_term(user, y, x);
-	flush_term(user);
+	flush_term(user);				//  ap:  I assume this is where the usable window display region is blanked out.
 
 	if (user == me)
 		send_region();
