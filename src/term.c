@@ -943,7 +943,7 @@ draw_box(user, height, width, c)
 		register char *t;
 
 		for(t = user->user_name; *t; ++t)
-			addch(*t);
+			addch_term(user, *t);
 
 		for (i = (int)strlen(user->user_name); i < width; i++)
 			addch_term(user, c);
