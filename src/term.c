@@ -965,7 +965,7 @@ draw_box(user, height, width, c)
 
 			//  To write centered on blame line: " blame " + username + " for " + minrows + " lines! "
 			int x = 0;
-			int i, pad;
+			int i, pad, lines_length;
 			char* blame_literal = " blame ";
 			register char *t;
 			char* for_literal = " for ";
@@ -975,8 +975,8 @@ draw_box(user, height, width, c)
 			for(i=0; i < 10; ++i)
 				restricted_lines[i] = '\0';
 
-			itoa(minrows, restricted_lines, 2);  //  Get the char* representing the number of lines
-			pad = (width - strlen(blame_literal) - strlen(minuser_name) - strlen(for_literal) - strlen(restricted_lines) - strlen(lines_literal)) / 2;
+			lines_length = sprintf(restricted_lines, "%d", minrows);  //  Get the char* representing the number of lines
+			pad = (width - strlen(blame_literal) - strlen(minuser_name) - strlen(for_literal) - lines_length - strlen(lines_literal)) / 2;
 
 			for (; x < pad - 1; x++)
 				addch_term(c);
