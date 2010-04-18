@@ -965,13 +965,14 @@ draw_box(user, height, width, c)
 
 			//  To write centered on blame line: " blame " + username + " for " + minrows + " lines! "
 			int x = 0;
+			int i, pad;
 			char* blame_literal = " blame ";
 			register char *t;
 			char* for_literal = " for ";
 			char[10] restricted_lines;  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
 			char* lines_literal = " lines! ";
 
-			for(int i=0; i < 10; ++i)
+			for(i=0; i < 10; ++i)
 				restricted_lines[i] = '\0';
 
 			itoa(minrows, restricted_lines, 2);  //  Get the char* representing the number of lines
