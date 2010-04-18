@@ -926,8 +926,6 @@ draw_box(user, height, width, c)
 	yuser *user;
 	int height, width;
 	char c;
-	int minrows;
-	char* minuser_name;
 {
 	register int i;
 
@@ -949,6 +947,8 @@ draw_box(user, height, width, c)
 			//  We want to first find the user who is to blame for this visible section
 			//  of the display area rendered unusable due to that user's smaller term
 			//  size restricting us.
+			int minrows;
+			char* minuser_name;
 			register yuser *u;
 			minrows = me->t_rows;
 
