@@ -978,9 +978,9 @@ draw_box(user, height, width, c)
 			lines_length = sprintf(restricted_lines, "%d", minrows);  //  Get the char* representing the number of lines
 			pad = (width - (int)strlen(blame_literal) - (int)strlen(minuser_name) - (int)strlen(for_literal) - lines_length - (int)strlen(lines_literal)) / 2;
 
-			for (; x < pad; x++)
-				addch_term(c);
-/*
+//			for (; x < pad; x++)
+//				addch_term(c);
+
 			for(t = blame_literal; *t; ++t)
 				addch_term(user, *t);
 
@@ -995,7 +995,7 @@ draw_box(user, height, width, c)
 
 			for(t = lines_literal; *t; ++t)
 				addch_term(user, *t);
-
+/*
 			for (; x < width; x++)
 				addch_term(c);
 				*/
