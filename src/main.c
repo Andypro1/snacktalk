@@ -170,7 +170,7 @@ then type 'make clean' and 'make'.\n");
 
 	if (vflg) {
 		/* print version and exit */
-		fprintf(stderr, "YTalk %s\n", PACKAGE_VERSION);
+		fprintf(stderr, "Snacktalk %s\n", PACKAGE_VERSION);
 		exit(YTE_SUCCESS);
 	}
 	/* check for users */

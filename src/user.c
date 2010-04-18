@@ -34,6 +34,7 @@ yuser *wait_list;		/* list of connected users */
 yuser *fd_to_user[MAX_FILES];	/* convert file descriptors to users */
 yuser *key_to_user[128];	/* convert menu ident chars to users */
 ylong def_flags = 0L;		/* default FL_* flags */
+char forceorder[MAXOPT];		/* 1k string buffer for the forceorder option */
 static ylong daemon_id;		/* running daemon ID counter */
 
 /* ---- local functions ----- */

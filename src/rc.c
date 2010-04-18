@@ -56,7 +56,18 @@ set_option(opt, value)
 	char *opt, *value;
 {
 	ylong mask = 0;
-	int set_it;
+	int set_it, i;
+
+	//  Added by ap:  Treat the forceorder option in a special manner since it's not just a flag value
+	if(strcmp(opt, "forceorder") == 0 || strcmp(opt, "fo") == 0) {
+		//  Initialize buffer for this option
+		for(i=0; i < MAXOPT; ++i)
+			forceorder[i] = '\0';
+
+		strcpy(forceorder, value);
+		def_flags |= FL_FORCEORDER;  //  Indicate that we have initialized and will use the forced user order
+		return 0;
+	}
 
 	if (strcmp(value, "true") == 0 || strcmp(value, "on") == 0)
 		set_it = 1;

@@ -173,11 +173,12 @@ typedef struct _yuser {
 #define FL_CAPS		0x00000100L	/* want caps as answers */
 #define FL_NOAUTO       0x00000200L	/* no auto-invite port */
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
-#define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
+#define FL_BEEP		0x00000800L	/* allow snacktalk to beep? */
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
 #define FL_PROMPTQUIT	0x00002000L	/* prompt before quitting */
 #define FL_ESC_YN	0x00004000L	/* want ESC before y/n answers */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
+#define FL_FORCEORDER	0x00008000L /* using the forceorder option for auto-ordering connected users */
 
 /* ---- defines and short-cuts ---- */
 
@@ -190,6 +191,7 @@ typedef struct _yuser {
 #define MAXBUF		4096	/* buffer size for I/O operations */
 #define MAXERR		132	/* error text buffer size */
 #define MAXTEXT		50	/* text entry buffer */
+#define MAXOPT		1024  /* max string buffer for options */
 
 #define RUB	edit[0]
 #define KILL	edit[1]
@@ -282,6 +284,7 @@ extern yuser *fd_to_user[MAX_FILES];	/* convert file descriptors to users */
 extern yuser *key_to_user[128];	/* convert menu ident chars to users */
 extern char errstr[MAXERR];	/* temporary string for errors */
 extern ylong def_flags;		/* default FL_* flags */
+extern char forceorder[MAXOPT];	/* 1k string buffer for the forceorder option */
 extern int user_winch;		/* user window/status changed flag */
 
 extern ychar *io_ptr;		/* user input pointer */
