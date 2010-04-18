@@ -117,6 +117,13 @@ exec_input(fd)
 	send_users(me, buf, rc, buf, rc);
 }
 
+/*
+  ap:  What this function does in english:
+  Start with my rows and cols as the desired number of rows and columns.
+  Now loop through every connected user and if his rows or cols are less than
+  my desired rows or cols, reduce my rows and cols until the smallest term'ed user
+  is satisfied.
+*/
 static void
 calculate_size(rows, cols)
 	int *rows, *cols;

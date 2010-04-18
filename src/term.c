@@ -926,6 +926,8 @@ draw_box(user, height, width, c)
 	yuser *user;
 	int height, width;
 	char c;
+	int minrows;
+	char* minuser_name;
 {
 	register int i;
 
@@ -940,13 +942,44 @@ draw_box(user, height, width, c)
 	if (height < user->t_rows) {
 		move_term(user, height, 0);
 
-		register char *t;
+		//  Added by ap:  Only change this draw_box code if it's being used
+		//  to fill the virtual display area.  If there are any other calls with other chars,
+		//  allow them to be processed traditionally.
+		if(c == '%') {
+			//  We want to first find the user who is to blame for this visible section
+			//  of the display area rendered unusable due to that user's smaller term
+			//  size restricting us.
+			register yuser *u;
+			minrows = me->t_rows;
 
-		for(t = user->user_name; *t; ++t)
-			addch_term(user, *t);
+			//  Loop through all connected users with supporting versions to report rows/cols.
+			for(u = connect_list; u; u = u->next) {
+				if (u->remote.vmajor > 2) {
+					//  This user is (further) restricting my rows.  Note his user_name for display.
+					if (u->remote.my_rows > 1 && u->remote.my_rows < minrows) {
+						minrows = u->remote.my_rows;
+						minuser_name = u->user_name;
+					}
+				}
+			}
 
-		for (i = (int)strlen(user->user_name); i < width; i++)
-			addch_term(user, c);
+			register char *t;
+
+			for(t = minuser_name; *t; ++t)
+				addch_term(user, *t);
+
+			addch_term(user, 'h');
+			addch_term(user, 'i');
+			//addch_term(user, itoa(minrows
+
+			for (i = (int)strlen(user->user_name) + 5; i < width; i++)
+				addch_term(user, c);
+		}
+		else {
+			for (i = 0; i < width; i++)
+				addch_term(user, c);
+		}
+
 		if (width < user->t_cols)
 			addch_term(user, c);
 		if (width + 1 < user->t_cols)
