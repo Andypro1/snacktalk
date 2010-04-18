@@ -963,17 +963,40 @@ draw_box(user, height, width, c)
 				}
 			}
 
+			//  To write centered on blame line: " blame " + username + " for " + minrows + " lines! "
+			int x = 0;
+			char* blame_literal = " blame ";
 			register char *t;
+			char* for_literal = " for ";
+			char[10] restricted_lines;  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
+			char* lines_literal = " lines! ";
+
+			for(int i=0; i < 10; ++i)
+				restricted_lines[i] = '\0';
+
+			itoa(minrows, restricted_lines, 2);  //  Get the char* representing the number of lines
+			pad = (width - strlen(blame_literal) - strlen(minuser_name) - strlen(for_literal) - strlen(restricted_lines) - strlen(lines_literal)) / 2;
+
+			for (; x < pad - 1; x++)
+				addch_term(c);
+
+			for(t = blame_literal; *t; ++t)
+				addch_term(user, *t);
 
 			for(t = minuser_name; *t; ++t)
 				addch_term(user, *t);
 
-			addch_term(user, 'h');
-			addch_term(user, 'i');
-			//addch_term(user, itoa(minrows
+			for(t = for_literal; *t; ++t)
+				addch_term(user, *t);
 
-			for (i = (int)strlen(user->user_name) + 5; i < width; i++)
-				addch_term(user, c);
+			for(t = restricted_lines; *t; ++t)
+				addch_term(user, *t);
+
+			for(t = lines_literal; *t; ++t)
+				addch_term(user, *t);
+
+			for (; x < width; x++)
+				addch_term(c);
 		}
 		else {
 			for (i = 0; i < width; i++)
@@ -990,40 +1013,6 @@ draw_box(user, height, width, c)
 		}
 	}
 }
-/*
-static void
-draw_blame_line(user, width)
-	ywin *w;
-{
-	register int pad, x;
-	register char *t;
-
-	if ((int) strlen(w->title) > w->width) {
-		for (x = 0; x < w->width; x++)
-			addch('-');
-		return;
-	}
-	pad = (w->width - strlen(w->title)) / 2;
-	move(w->row - 1, w->col);
-	x = 0;
-	for (; x < pad - 2; x++)
-		addch('-');
-	if (pad >= 2) {
-		addch('=');
-		addch(' ');
-		x += 2;
-	}
-	for (t = w->title; *t && x < w->width; x++, t++)
-		addch(*t);
-	if (pad >= 2) {
-		addch(' ');
-		addch('=');
-		x += 2;
-	}
-	for (; x < w->width; x++)
-		addch('-');
-}
-*/
 
 /*
  * Set the virtual terminal size, ie: the display region.
