@@ -964,7 +964,7 @@ draw_box(user, height, width, c)
 			}
 
 			//  To write centered on blame line: " blame " + username + " for " + minrows + " lines! "
-			register int pad, x; = 0;
+			register int pad, x;
 			int lines_length;
 			char* blame_literal = " blame \0";
 			register char *t;
