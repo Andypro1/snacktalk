@@ -979,7 +979,7 @@ draw_box(user, height, width, c)
 			pad = (width - (int)strlen(blame_literal) - (int)strlen(minuser_name) - (int)strlen(for_literal) - lines_length - (int)strlen(lines_literal)) / 2;
 
 			for (x=0; x < pad; x++)
-				addch_term(c);
+				addch_term(user, c);
 
 			for(t = blame_literal; *t; ++t)
 				addch_term(user, *t);
@@ -997,7 +997,7 @@ draw_box(user, height, width, c)
 				addch_term(user, *t);
 
 			for (; x < width; x++)
-				addch_term(c);
+				addch_term(user, c);
 				
 		}
 		else {
