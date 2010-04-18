@@ -969,7 +969,7 @@ draw_box(user, height, width, c)
 			char* blame_literal = " blame ";
 			register char *t;
 			char* for_literal = " for ";
-			char[10] restricted_lines;  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
+			char restricted_lines[10];  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
 			char* lines_literal = " lines! ";
 
 			for(i=0; i < 10; ++i)
