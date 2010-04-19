@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT([Snacktalk], [3.3.2])
+AC_INIT([Snacktalk], [3.3.3])
 AC_CONFIG_SRCDIR(src/main.c)
 
 AM_INIT_AUTOMAKE
