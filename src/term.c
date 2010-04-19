@@ -947,8 +947,8 @@ draw_box(user, height, width, c)
 			//  We want to first find the user who is to blame for this visible section
 			//  of the display area rendered unusable due to that user's smaller term
 			//  size restricting us.
-			int minrows;
-			char* minuser_name;
+			int minrows = 2000000000;  //  close enough to max signed int.
+			char* minuser_name = '\0';
 			register yuser *u;
 			minrows = me->t_rows;
 
@@ -962,6 +962,9 @@ draw_box(user, height, width, c)
 					}
 				}
 			}
+
+			if(minrows == 2000000000)
+				return;  //  no blame found; do not write line/box.
 
 			//  To write centered on blame line: " blame " + username + " for " + minrows + " lines! "
 			register int pad, x;
@@ -998,7 +1001,6 @@ draw_box(user, height, width, c)
 
 			for (; x < width; x++)
 				addch_term(user, c);
-				
 		}
 		else {
 			for (i = 0; i < width; i++)
