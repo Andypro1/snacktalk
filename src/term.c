@@ -948,7 +948,7 @@ draw_box(user, height, width, c)
 			//  of the display area rendered unusable due to that user's smaller term
 			//  size restricting us.
 			int minrows = 2000000000;  //  close enough to max signed int.
-			char* minuser_name = '\0';
+			char* minuser_name;
 			register yuser *u;
 			minrows = me->t_rows;
 
@@ -963,6 +963,10 @@ draw_box(user, height, width, c)
 				}
 			}
 
+			//  Segfault issue and "unit" test:
+			//  2 people snacktalk.  Both start shells.  
+			//  Resizing user goes to half lines (36 down to 18),
+			//  then other user segfaults but resizing user does not.
 			if(minrows == 2000000000)
 				return;  //  no blame found; do not write line/box.
 
