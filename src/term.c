@@ -948,7 +948,7 @@ draw_box(user, height, width, c)
 			//  of the display area rendered unusable due to that user's smaller term
 			//  size restricting us.
 			int minrows;  //  close enough to max signed int.
-			bool foundSomeone = false;
+			int foundSomeone = 0;
 			char* minuser_name;
 			register yuser *u;
 			minrows = me->t_rows;
@@ -960,7 +960,7 @@ draw_box(user, height, width, c)
 					if (u->remote.my_rows > 1 && u->remote.my_rows < minrows) {
 						minrows = u->remote.my_rows;
 						minuser_name = u->user_name;
-						foundSomeone = true;
+						foundSomeone = 1;
 					}
 				}
 			}
