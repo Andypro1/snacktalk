@@ -947,7 +947,8 @@ draw_box(user, height, width, c)
 			//  We want to first find the user who is to blame for this visible section
 			//  of the display area rendered unusable due to that user's smaller term
 			//  size restricting us.
-			int minrows = 2000000000;  //  close enough to max signed int.
+			int minrows;  //  close enough to max signed int.
+			bool foundSomeone = false;
 			char* minuser_name;
 			register yuser *u;
 			minrows = me->t_rows;
@@ -959,15 +960,15 @@ draw_box(user, height, width, c)
 					if (u->remote.my_rows > 1 && u->remote.my_rows < minrows) {
 						minrows = u->remote.my_rows;
 						minuser_name = u->user_name;
+						foundSomeone = true;
 					}
 				}
 			}
 
-			//  Segfault issue and "unit" test:
-			//  2 people snacktalk.  Both start shells.  
-			//  Resizing user goes to half lines (36 down to 18),
-			//  then other user segfaults but resizing user does not.
-			if(minrows == 2000000000)
+			//  Problem:  When a user who is to blame for a resize resizes again,
+			//  a line appears: "Blame  for 17 rows!"  which should never be printed.
+			//  Perhaps skip "me" in the above for loop to fix?
+			if(!foundSomeone)
 				return;  //  no blame found; do not write line/box.
 
 			//  To write centered on blame line: " blame " + username + " for " + minrows + " lines! "
