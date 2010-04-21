@@ -224,7 +224,6 @@ new_user(name, hostname, tty)
 	out->flags = def_flags;
 
 	/* Actually make an effort to keep the user list in order */
-
 	if (user_list == NULL || out->key <= user_list->key) {
 		out->unext = user_list;
 		user_list = out;
@@ -235,6 +234,9 @@ new_user(name, hostname, tty)
 		out->unext = u->unext;
 		u->unext = out;
 	}
+
+
+
 	return out;
 }
 

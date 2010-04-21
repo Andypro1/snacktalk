@@ -965,9 +965,6 @@ draw_box(user, height, width, c)
 				}
 			}
 
-			//  Problem:  When a user who is to blame for a resize resizes again,
-			//  a line appears: "Blame  for 17 rows!"  which should never be printed.
-			//  Perhaps skip "me" in the above for loop to fix?
 			if(!foundSomeone)
 				return;  //  no blame found; do not write line/box.
 

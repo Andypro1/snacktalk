@@ -602,8 +602,20 @@ ytalk_user(fd)
 				u->next = user->next;
 				break;
 			}
-	user->next = connect_list;
-	connect_list = user;
+
+	//  Added by ap: If we have a forced order set, then enforce it here
+	//  as we're adding this new user to make sure we always conform to our user order.
+	if(def_flags & FL_FORCEORDER == FL_FORCEORDER) {
+		for(u = connect_list; u; u = u->next)
+			if(!u->next)
+				break;
+
+		u->next = user;  //  try putting me at the top... 
+	}
+	else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
+		user->next = connect_list;
+		connect_list = user;
+	}
 
 	/* send him my status */
 
@@ -683,8 +695,20 @@ connect_user(fd)
 					u->next = user->next;
 					break;
 				}
-		user->next = connect_list;
-		connect_list = user;
+
+		//  Added by ap: If we have a forced order set, then enforce it here
+		//  as we're adding this new user to make sure we always conform to our user order.
+		if(def_flags & FL_FORCEORDER == FL_FORCEORDER) {
+			for(u = connect_list; u; u = u->next)
+				if(!u->next)
+					break;
+
+			u->next = user;  //  try putting me at the top... 
+		}
+		else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
+			user->next = connect_list;
+			connect_list = user;
+		}
 
 		spew_term(me, fd, me->t_rows, me->t_cols);
 		user_winch = 1;
