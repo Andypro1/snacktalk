@@ -177,16 +177,6 @@ curses_redraw()
 	row = 0;
 	curwin = 0;
 	for (w = head; w; w = w->next) {
-		/*
-		if (w->next) {
-			make_win(w, wsize - 1, COLS, row + 1, 0);
-			resize_win(w->user, wsize - 1, COLS);
-		} else {
-			make_win(w, LINES - row - 2, COLS, row + 1, 0);
-			resize_win(w->user, LINES - row - 2, COLS);
-		}
-		*/
-
 		//  2008-04-08 Andypro: Improved algorithm for divvying up the terminal
 		if(curwin < wins - (LINES % wins)) { //do not allocate an extra line
 		   make_win(w, (LINES / wins)-1, COLS, row+1, 0);
@@ -303,17 +293,35 @@ open_curses(user, title)
 	if (win_size(wins + 1) < 3)
 		return -1;
 
-	/* add the new user */
+	/* add the new user */  //  ap: This is where the user gets added to the terminal!!!!
 
-	if (head == NULL)
-		w = head = new_ywin(user, title);
-	else
-		for (w = head; w; w = w->next)
-			if (w->next == NULL) {
-				w->next = new_ywin(user, title);
-				w = w->next;
-				break;
+	//  Added by ap: If we have a forced order set, then enforce it here
+	//  as we're adding this new user to make sure we always conform to our user order.
+	if(def_flags & FL_FORCEORDER == FL_FORCEORDER) {
+		if (head == NULL) {
+			w = head = new_ywin(user, title);
+		}
+		else { //reverse order for testing
+			w = head;
+			head = new_ywin(user, title);
+			head->next = w;
+		}
+	}
+	else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
+		if (head == NULL) {
+			w = head = new_ywin(user, title);
+		}
+		else {
+			for (w = head; w; w = w->next) {
+				if (w->next == NULL) {
+					w->next = new_ywin(user, title);
+					w = w->next;
+					break;
+				}
 			}
+		}
+	}
+
 	user->term = w;
 
 	/* redraw */

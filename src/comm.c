@@ -603,19 +603,8 @@ ytalk_user(fd)
 				break;
 			}
 
-	//  Added by ap: If we have a forced order set, then enforce it here
-	//  as we're adding this new user to make sure we always conform to our user order.
-	if(def_flags & FL_FORCEORDER == FL_FORCEORDER) {
-		for(u = connect_list; u; u = u->next)
-			if(!u->next)
-				break;
-
-		u->next = user;  //  try putting me at the top... 
-	}
-	else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
 		user->next = connect_list;
 		connect_list = user;
-	}
 
 	/* send him my status */
 
@@ -663,7 +652,7 @@ connect_user(fd)
 		show_error("connect_user: bad read");
 		return;
 	}
-	if (open_term(user, user->full_name) < 0) {
+	if (open_term(user, user->full_name) < 0) {  //  ap:  This is the precise line in which a new user gets placed in the terminal space!!!!  
 		free_user(user);
 		show_error("connect_user: open_term() failed");
 		return;
@@ -696,19 +685,8 @@ connect_user(fd)
 					break;
 				}
 
-		//  Added by ap: If we have a forced order set, then enforce it here
-		//  as we're adding this new user to make sure we always conform to our user order.
-		if(def_flags & FL_FORCEORDER == FL_FORCEORDER) {
-			for(u = connect_list; u; u = u->next)
-				if(!u->next)
-					break;
-
-			u->next = user;  //  try putting me at the top... 
-		}
-		else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
-			user->next = connect_list;
-			connect_list = user;
-		}
+		user->next = connect_list;
+		connect_list = user;
 
 		spew_term(me, fd, me->t_rows, me->t_cols);
 		user_winch = 1;
