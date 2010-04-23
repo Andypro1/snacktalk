@@ -311,9 +311,9 @@ open_curses(user, title)
 			}
 		}
 		else { //if there is me and another dude, start adding in reverse order for testing
-			w = head;
-			head = new_ywin(user, title);
-			head->next = w;
+			w = head->next;
+			head->next = new_ywin(user, title);
+			head->next->next = w;
 		}
 	}
 	else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
