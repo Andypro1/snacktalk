@@ -301,7 +301,16 @@ open_curses(user, title)
 		if (head == NULL) {
 			w = head = new_ywin(user, title);
 		}
-		else { //reverse order for testing
+		else if(head->next == NULL) { //if it's just me, then add whoever after me
+			for (w = head; w; w = w->next) {
+				if (w->next == NULL) {
+					w->next = new_ywin(user, title);
+					w = w->next;
+					break;
+				}
+			}
+		}
+		else { //if there is me and another dude, start adding in reverse order for testing
 			w = head;
 			head = new_ywin(user, title);
 			head->next = w;
