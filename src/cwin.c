@@ -293,11 +293,11 @@ open_curses(user, title)
 	if (win_size(wins + 1) < 3)
 		return -1;
 
-	/* add the new user */  //  ap: This is where the user gets added to the terminal!!!!
+	/* add the new user */  //  ap: This is where the user gets added to the window list!!!!
 
 	//  Added by ap: If we have a forced order set, then enforce it here
 	//  as we're adding this new user to make sure we always conform to our user order.
-	if(def_flags & FL_FORCEORDER == FL_FORCEORDER) {
+	if(def_flags & FL_FORCEORDER) {
 		if (head == NULL) {
 			w = head = new_ywin(user, title);
 		}
