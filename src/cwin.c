@@ -314,6 +314,7 @@ open_curses(user, title)
 			w = head->next;
 			head->next = new_ywin(user, title);
 			head->next->next = w;
+			w = head->next;  //  this needs to be set for the term assignment below!
 		}
 	}
 	else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
