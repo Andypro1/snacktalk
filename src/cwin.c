@@ -44,6 +44,8 @@ typedef struct _ywin {
 
 static ywin *head;		/* head of linked list */
 
+char[V3_NAMELEN+1] tempOrderUser;		/* stack memory for holding usernames from the forceorder option */
+
 /*
  * Take input from the user.
  */
@@ -272,6 +274,31 @@ end_curses()
 	endwin();
 }
 
+//  Returns a null-terminated string reference to the user at index "index"
+//  in the forceorder list option if present.  Otherwise returns an empty string
+void forceduser_atindex(int index) {
+	//forceorder[MAXOPT]			//  The pipe-separated user list
+	//tempOrderUser[V3_NAMELEN+1]	//  the stack mem to return our result
+
+	int i, pipecount, copycount, listlength;
+
+	pipecount = 0;
+	copycount = 0;
+	listlength = (int)strlen(forceorder);
+
+	for(i=0; (i < listlength) && (copycount <= V3_NAMELEN); ++i) {
+		if((pipecount == index) && (forceorder[i] != '|')) {
+			tempOrderUser[copycount] = forceorder[i];
+			copycount++;
+		}
+
+		if(forceorder[i] == '|')
+			pipecount++;
+	}
+
+	tempOrderUser[copycount] = '\0';
+}
+
 /*
  * Open a new window.
  */
@@ -281,7 +308,9 @@ open_curses(user, title)
 	char *title;
 {
 	register ywin *w;
+	ywin* temp;
 	register int wins;
+	char* incoming_username;
 
 	/*
 	 * count the open windows.  We want to ensure at least three lines
@@ -294,6 +323,7 @@ open_curses(user, title)
 		return -1;
 
 	/* add the new user */  //  ap: This is where the user gets added to the window list!!!!
+	incoming_username = user->user_name;
 
 	//  Added by ap: If we have a forced order set, then enforce it here
 	//  as we're adding this new user to make sure we always conform to our user order.
@@ -301,23 +331,66 @@ open_curses(user, title)
 		if (head == NULL) {
 			w = head = new_ywin(user, title);
 		}
-		else if(head->next == NULL) { //if it's just me, then add whoever after me
-			for (w = head; w; w = w->next) {
-				if (w->next == NULL) {
-					w->next = new_ywin(user, title);
-					w = w->next;
-					break;
-				}
-			}
-		}
 		else { //if there is me and another dude, start adding in reverse order for testing
 			w = head->next;
 			head->next = new_ywin(user, title);
 			head->next->next = w;
 			w = head->next;  //  this needs to be set for the term assignment below!
+
+			//  Pseudo code for force order processing
+			//
+			//  1.  Identify incoming user_name's spot in the forceorder list
+			int nameindex = 0;
+			forceduser_atindex(nameindex);
+
+			while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, user->user_name) == 0)) {
+				nameindex++;
+				forceduser_atindex(nameindex);
+			}
+
+			if((int)strlen(tempOrderUser) <= 0) { //incoming user not found in the order list; default snacktalk behavior.
+				for (w = head; w; w = w->next) {
+					if (w->next == NULL) {
+						w->next = new_ywin(user, title);
+						w = w->next;
+						break;
+					}
+				}
+			}
+			else {
+				//  2.  For each person present, make sure
+				//		said person is before us in the forceorder list (< nameindex)
+				//			if not, insert us here and break.
+				int thisguyindex = 0;
+
+				for (w = head; w; w = w->next) {
+					if(thisguyindex < nameindex) {
+						//  Identify this user's spot in the forceorder list
+						forceduser_atindex(thisguyindex);
+
+						while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, w->user->user_name) == 0) && (thisguyindex <= nameindex)) {
+							thisguyindex++;
+							forceduser_atindex(thisguyindex);
+						}
+					}
+
+					if(nameindex < thisguyindex) { //the incoming user belongs before this guy!  Put him in.
+						temp = w;
+						w = new_ywin(user, title);
+						w->next = temp;
+						break;
+					}
+
+					if(w->next == NULL) {
+						w->next = new_ywin(user, title);
+						w = w->next;
+						break;
+					}
+				}
+			}
 		}
 	}
-	else { //default snacktalk behavior -> user goes to start of list (bottom of screen?)
+	else { //default snacktalk behavior -> user goes to end of list (bottom of screen)
 		if (head == NULL) {
 			w = head = new_ywin(user, title);
 		}
@@ -332,9 +405,7 @@ open_curses(user, title)
 		}
 	}
 
-	user->term = w;
-
-	/* redraw */
+	user->term = w;  //  assign the terminal pointer from the newly-created window
 	curses_redraw();
 
 	return 0;
