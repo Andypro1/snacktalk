@@ -374,7 +374,7 @@ open_curses(user, title)
 						}
 					}
 
-					if(nameindex < thisguyindex) { //the incoming user belongs before this guy!  Put him in.
+					if(nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in.
 						temp = w;
 						w = new_ywin(user, title);
 						w->next = temp;
