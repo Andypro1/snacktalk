@@ -44,7 +44,7 @@ typedef struct _ywin {
 
 static ywin *head;		/* head of linked list */
 
-char[V3_NAMELEN+1] tempOrderUser;		/* stack memory for holding usernames from the forceorder option */
+char tempOrderUser[V3_NAMELEN+1];		/* stack memory for holding usernames from the forceorder option */
 
 /*
  * Take input from the user.
