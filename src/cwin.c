@@ -356,18 +356,17 @@ open_curses(user, title)
 				//  2.  For each person present, make sure
 				//		said person is before us in the forceorder list (< nameindex)
 				//			if not, insert us here and break.
-				int thisguyindex = 0;
-
 				for (w = head; w; w = w->next) {
-					if(thisguyindex < nameindex) {
-						//  Identify this user's spot in the forceorder list
-						forceduser_atindex(thisguyindex);
+					int thisguyindex = 0;
 
-						while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, w->user->user_name) != 0) && (thisguyindex <= nameindex)) {
-							thisguyindex++;
-							forceduser_atindex(thisguyindex);
-						}
+					//  Identify this user's spot in the forceorder list
+					forceduser_atindex(thisguyindex);
+
+					while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, w->user->user_name) != 0) && (thisguyindex <= nameindex)) {
+						thisguyindex++;
+						forceduser_atindex(thisguyindex);
 					}
+
 
 					if(nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in.
 						temp = w;
