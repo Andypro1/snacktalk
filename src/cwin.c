@@ -343,7 +343,7 @@ open_curses(user, title)
 			int nameindex = 0;
 			forceduser_atindex(nameindex);
 
-			while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, user->user_name) == 0)) {
+			while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, user->user_name) != 0)) {
 				nameindex++;
 				forceduser_atindex(nameindex);
 			}
@@ -368,7 +368,7 @@ open_curses(user, title)
 						//  Identify this user's spot in the forceorder list
 						forceduser_atindex(thisguyindex);
 
-						while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, w->user->user_name) == 0) && (thisguyindex <= nameindex)) {
+						while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, w->user->user_name) != 0) && (thisguyindex <= nameindex)) {
 							thisguyindex++;
 							forceduser_atindex(thisguyindex);
 						}
