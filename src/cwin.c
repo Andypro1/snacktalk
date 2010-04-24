@@ -299,6 +299,19 @@ void forceduser_atindex(int index) {
 	tempOrderUser[copycount] = '\0';
 }
 
+//  Returns the 0-based index in the forcedorder snacktalk option of the passed-in username
+int get_forceduser_index(char* name) {
+	int nameindex = 0;
+	forceduser_atindex(nameindex);
+
+	while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, name) != 0)) {
+		nameindex++;
+		forceduser_atindex(nameindex);
+	}
+
+	return nameindex;
+}
+
 /*
  * Open a new window.
  */
@@ -332,16 +345,8 @@ open_curses(user, title)
 			w = head = new_ywin(user, title);
 		}
 		else { //if there is me and another dude, start adding in reverse order for testing
-			//  Pseudo code for force order processing
-			//
 			//  1.  Identify incoming user_name's spot in the forceorder list
-			int nameindex = 0;
-			forceduser_atindex(nameindex);
-
-			while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, user->user_name) != 0)) {
-				nameindex++;
-				forceduser_atindex(nameindex);
-			}
+			int incominguser_nameindex = get_forceduser_index(user->user_name);
 
 			if((int)strlen(tempOrderUser) <= 0) { //incoming user not found in the order list; default snacktalk behavior.
 				for (w = head; w; w = w->next) {
@@ -353,25 +358,21 @@ open_curses(user, title)
 				}
 			}
 			else {
-				//  2.  For each person present, make sure
-				//		said person is before us in the forceorder list (< nameindex)
-				//			if not, insert us here and break.
+				//  2.  For each person present, make sure said person is before us in the
+				//  forceorder list (< incominguser_nameindex).  If not, insert us here and break.
 				for (w = head; w; w = w->next) {
-					int thisguyindex = 0;
-
 					//  Identify this user's spot in the forceorder list
-					forceduser_atindex(thisguyindex);
+					int thisguyindex = get_forceduser_index(w->user->user_name);
 
-					while(((int)strlen(tempOrderUser) > 0) && (strcmp(tempOrderUser, w->user->user_name) != 0) && (thisguyindex <= nameindex)) {
-						thisguyindex++;
-						forceduser_atindex(thisguyindex);
-					}
-
-
-					if(nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in.
+					if(incominguser_nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in
 						temp = w;
 						w = new_ywin(user, title);
 						w->next = temp;  //  w needs to be set for the term assignment below!
+
+						//  Set head if we just placed the incoming user at the start of the list
+						if(temp == head)
+							head = w;
+
 						break;
 					}
 
