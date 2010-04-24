@@ -341,10 +341,10 @@ open_curses(user, title)
 	//  Added by ap: If we have a forced order set, then enforce it here
 	//  as we're adding this new user to make sure we always conform to our user order.
 	if(def_flags & FL_FORCEORDER) {
-		if (head == NULL) {
+		if (head == NULL) { //only one place the new user can go
 			w = head = new_ywin(user, title);
 		}
-		else { //if there is me and another dude, start adding in reverse order for testing
+		else { //check the order and place incoming user accordingly
 			//  1.  Identify incoming user_name's spot in the forceorder list
 			int incominguser_nameindex = get_forceduser_index(user->user_name);
 
@@ -361,24 +361,35 @@ open_curses(user, title)
 				//  2.  For each person present, make sure said person is before us in the
 				//  forceorder list (< incominguser_nameindex).  If not, insert us here and break.
 				for (w = head; w; w = w->next) {
-					//  Identify this user's spot in the forceorder list
-					int thisguyindex = get_forceduser_index(w->user->user_name);
+					if(w == head) {  //  we need to test against this first user the first time through.  All subsequent tests will be against the w->next user.
+						//  Identify this user's spot in the forceorder list
+						int thisguyindex = get_forceduser_index(w->user->user_name);
 
-					if(incominguser_nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in
-						temp = w;
-						w = new_ywin(user, title);
-						w->next = temp;  //  w needs to be set for the term assignment below!
+						if(incominguser_nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in
+							temp = w;
+							w = new_ywin(user, title);
+							w->next = temp;  //  w needs to be set for the term assignment below!
+							head = w;  //  The incoming user is now the leader
 
-						//  Set head if we just placed the incoming user at the start of the list
-						if(temp == head)
-							head = w;
+							break;
+						}
+					}
 
+					if(w->next == NULL) { //We're at end-of-list.  No where else to go but at the end
+						w->next = new_ywin(user, title);
+						w = w->next;
 						break;
 					}
 
-					if(w->next == NULL) {
-						w->next = new_ywin(user, title);
-						w = w->next;
+					//  Identify the next user's spot in the forceorder list
+					int nextguyindex = get_forceduser_index(w->next->user->user_name);
+
+					if(incominguser_nameindex <= nextguyindex) { //the incoming user belongs before the next guy!  Put him in
+						temp = w->next;  //  Save rest of chain
+						w->next = new_ywin(user, title);  //  Next user is incoming user
+						w->next->next = temp;  //  Reattach chain after incoming user
+						w = w->next;  //  w needs to be set for the term assignment below!
+
 						break;
 					}
 				}
