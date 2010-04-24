@@ -332,11 +332,6 @@ open_curses(user, title)
 			w = head = new_ywin(user, title);
 		}
 		else { //if there is me and another dude, start adding in reverse order for testing
-			w = head->next;
-			head->next = new_ywin(user, title);
-			head->next->next = w;
-			w = head->next;  //  this needs to be set for the term assignment below!
-
 			//  Pseudo code for force order processing
 			//
 			//  1.  Identify incoming user_name's spot in the forceorder list
@@ -377,7 +372,7 @@ open_curses(user, title)
 					if(nameindex <= thisguyindex) { //the incoming user belongs before this guy!  Put him in.
 						temp = w;
 						w = new_ywin(user, title);
-						w->next = temp;
+						w->next = temp;  //  w needs to be set for the term assignment below!
 						break;
 					}
 
