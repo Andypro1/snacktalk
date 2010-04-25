@@ -211,6 +211,8 @@ curses_start()
 		fprintf(stderr, "Error opening terminal: %s.\n", (term ? term : "(null)"));
 		bail(YTE_INIT);
 	}
+
+	start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
 	noraw();
 	crmode();
 	noecho();
