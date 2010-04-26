@@ -212,7 +212,7 @@ curses_start()
 		bail(YTE_INIT);
 	}
 
-	start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
+	//start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
 	noraw();
 	crmode();
 	noecho();
