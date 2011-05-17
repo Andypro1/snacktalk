@@ -120,6 +120,10 @@ set_option(opt, value)
 		 || strcmp(opt, "pq") == 0)
 		mask |= FL_PROMPTQUIT;
 
+	else if (strcmp(opt, "color") == 0
+		 || strcmp(opt, "colour") == 0)
+		mask |= FL_COLOR;
+
 	else if (strcmp(opt, "beeps") == 0)
 		mask |= FL_BEEP;
 
@@ -322,7 +326,7 @@ read_ytalkrc()
 	read_rcfile(SYSTEM_SNACKTALKRC);
 #endif
 
-	/* read the user's ytalkrc file */
+	/* read the user's snacktalkrc file */
 	home = getenv("HOME");
 
 	if (home == NULL) {

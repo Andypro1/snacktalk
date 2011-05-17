@@ -179,6 +179,7 @@ typedef struct _yuser {
 #define FL_ESC_YN	0x00004000L	/* want ESC before y/n answers */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 #define FL_FORCEORDER	0x00008000L /* using the forceorder option for auto-ordering connected users */
+#define FL_COLOR	0x00010000L /* color enabled */
 
 /* ---- defines and short-cuts ---- */
 
