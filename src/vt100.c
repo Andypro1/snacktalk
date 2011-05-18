@@ -294,7 +294,7 @@ vt100_process(user, data)
 					int j;
 					char restricted_lines[10];  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
 
-					for(j=0; i < 10; ++j)
+					for(j=0; j < 10; ++j)
 						restricted_lines[j] = '\0';
 
 					number_length = sprintf(restricted_lines, "%d", user->vt.av[i]);  //  Get the char* representing the number of lines
