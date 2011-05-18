@@ -283,6 +283,27 @@ vt100_process(user, data)
 		scroll_term(user);
 		user->vt.got_esc = 0;
 		break;
+	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
+		if(user->vt.got_esc == 2) {
+			if(user->vt.av[0] > 0) {
+				write(user->fd, "\033[", 2);
+
+				for(int i=0; user->vt.av[i] > 0; ++i) {
+					write(user->fd, user->vt.av[i], 1);
+
+					if(user->vt.av[i+1] > 0) //not the last argument
+						write(user->fd, ";", 1);
+				}
+
+				write(user->fd, "m", 1);
+			}
+			else { //SGR() (no arguments - reset formatting)
+				write(user->fd, "\033[m", 3);
+			}
+		}
+
+		user->vt.got_esc = 0;
+		break;
 	case 'r':		/* set scroll region */
 		if (user->vt.got_esc == 2) {
 			if (user->vt.av[0] > 0)
