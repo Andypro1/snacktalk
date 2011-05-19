@@ -284,11 +284,11 @@ vt100_process(user, data)
 		user->vt.got_esc = 0;
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
+		int color_set = 0;
+
 		if(def_flags & FL_COLOR) { //may as well use this flag for something
 			if(user->vt.got_esc == 2) {
 				if(user->vt.av[0] > 0) {
-					int color_set = 0;
-
 					if(user->vt.av[0] >= 30 && user->vt.av[0] <= 37) {
 						//  Set foreground color
 						init_pair(1, user->vt.av[0]-30, -1);  //  default background color
@@ -300,11 +300,6 @@ vt100_process(user, data)
 						init_pair(1, -1, user->vt.av[0]-40);  //  default foreground color
 						attron(COLOR_PAIR(1));
 						color_set = 1;
-					}
-
-					if(color_set == 1) { //instruct term that we used color
-						user->vt.got_esc = 39;
-						break;
 					}
 
 					//  TODO: Find or create a term function (not write) that can simply write() non-printable
@@ -347,7 +342,14 @@ vt100_process(user, data)
 			}
 		}
 
-		user->vt.got_esc = 0;
+		if(color_set == 1) { //instruct term that we used color
+			color_set = 0;
+			user->vt.got_esc = 39;
+		}
+		else {
+			user->vt.got_esc = 0;
+		}
+
 		break;
 	case 'r':		/* set scroll region */
 		if (user->vt.got_esc == 2) {
