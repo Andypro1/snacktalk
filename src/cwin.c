@@ -212,6 +212,11 @@ curses_start()
 		bail(YTE_INIT);
 	}
 
+	if(def_flags & FL_COLOR) {
+		start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
+		use_default_colors();  //  avoids curses color silliness
+	}
+
 	noraw();
 	crmode();
 	noecho();
