@@ -567,9 +567,9 @@ add_raw_term_sequence_curses(user, str)
 	register ywin *w;
 
 	w = (ywin *) (user->term);
-	set_raw_curses();
+	cbreak();
 	waddstr(w->win, str);
-	set_cooked_curses();
+	nocbreak();
 }
 
 /*
