@@ -27,6 +27,7 @@ vt100_process(user, data)
 	char data;
 {
 	int i;
+	int color_set = 0;
 
 	if (data >= '0' && data <= '9') {
 		if (user->vt.got_esc > 1) {
@@ -284,8 +285,6 @@ vt100_process(user, data)
 		user->vt.got_esc = 0;
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
-		int color_set = 0;
-
 		if(def_flags & FL_COLOR) { //may as well use this flag for something
 			if(user->vt.got_esc == 2) {
 				if(user->vt.av[0] > 0) {
