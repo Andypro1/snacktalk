@@ -559,6 +559,19 @@ redisplay_curses()
 	}
 }
 
+void
+add_raw_term_sequence_curses(user, str)
+	register yuser *user;
+	register char *str;
+{
+	register ywin *w;
+
+	w = (ywin *) (user->term);
+	set_raw_curses();
+	waddstr(w->win, str);
+	set_cooked_curses();
+}
+
 /*
  * Set raw mode.
  */

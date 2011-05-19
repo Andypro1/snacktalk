@@ -1242,13 +1242,7 @@ add_raw_term_sequence_term(user, str)
 	yuser *user;
 	char *str;
 {
-	register ywin *w;
-
-	w = (ywin *) (user->term);
-	set_raw_curses();
-	waddstr(w->win, str);
-	addch_curses(user, *c);
-	set_cooked_curses();
+	add_raw_term_sequence_curses(user, str);
 }
 
 int
