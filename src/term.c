@@ -1234,6 +1234,23 @@ raw_term(user, y, x, str, len)
 	}
 }
 
+//  A function used to bypass curses and write raw terminal sequences
+//  to a window.  Currently used to handle character formatting without
+//  the mess of the curses library.
+void
+add_raw_term_sequence_term(user, str)
+	yuser *user;
+	char *str;
+{
+	register ywin *w;
+
+	w = (ywin *) (user->term);
+	set_raw_curses();
+	waddstr(w->win, str);
+	addch_curses(user, *c);
+	set_cooked_curses();
+}
+
 int
 center(width, n)
 	int width, n;

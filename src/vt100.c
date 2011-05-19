@@ -286,13 +286,6 @@ vt100_process(user, data)
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(def_flags & FL_COLOR) { //may as well use this flag for something
 			if(user->vt.got_esc == 2) {
-				//  int waddstr(WINDOW *win, const char *str); - prototype curses string function
-				//  Begin inject mode to send a terminal sequence
-				set_raw_curses();
-
-				register ywin *w;
-				w = (ywin *) (user->term);
-
 				if(user->vt.av[0] > 0) {
 					//  TODO: Find or create a term function (not write) that can simply write() non-printable
 					//  messages like vtxxx control sequences as output in the correct location.  Then when ncurses' flush_term()
@@ -300,7 +293,7 @@ vt100_process(user, data)
 					//  term commands / text.
 
 					//write(user->fd, "\033[", 2);
-					waddstr(w->win, "\033[");
+					add_raw_term_sequence_term(user, "\033[");
 
 					for(i=0; user->vt.av[i] > 0; ++i) {
 						//////  Create string from number
@@ -315,23 +308,21 @@ vt100_process(user, data)
 						//////  End string creation
 
 						//write(user->fd, restricted_lines, number_length);
-						waddstr(w->win, restricted_lines);
+						add_raw_term_sequence_term(user, restricted_lines);
 
 						if(user->vt.av[i+1] > 0) { //not the last argument
 							//write(user->fd, ";", 1);
-							waddstr(w->win, ";");
+							add_raw_term_sequence_term(user, ";");
 						}
 					}
 
 					//write(user->fd, "m", 1);
-					waddstr(w->win, "m");
+					add_raw_term_sequence_term(user, "m");
 				}
 				else { //SGR() (no arguments - reset formatting)
 					//write(user->fd, "\033[m", 3);
-					waddstr(w->win, "\033[m");
+					add_raw_term_sequence_term(user, "\033[m");
 				}
-
-				set_cooked_curses();
 			}
 		}
 
