@@ -284,32 +284,54 @@ vt100_process(user, data)
 		user->vt.got_esc = 0;
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
-		if(user->vt.got_esc == 2) {
-			if(user->vt.av[0] > 0) {
-				write(user->fd, "\033[", 2);
+		if(def_flags & FL_COLOR) { //may as well use this flag for something
+			if(user->vt.got_esc == 2) {
+				//  int waddstr(WINDOW *win, const char *str); - prototype curses string function
+				//  Begin inject mode to send a terminal sequence
+				set_raw_curses();
 
-				for(i=0; user->vt.av[i] > 0; ++i) {
-					//////  Create string from number
-					int number_length;
-					int j;
-					char restricted_lines[10];  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
+				register ywin *w;
+				w = (ywin *) (user->term);
 
-					for(j=0; j < 10; ++j)
-						restricted_lines[j] = '\0';
+				if(user->vt.av[0] > 0) {
+					//  TODO: Find or create a term function (not write) that can simply write() non-printable
+					//  messages like vtxxx control sequences as output in the correct location.  Then when ncurses' flush_term()
+					//  is called, the non-printable messages will be written out in the correct order like the rest of the
+					//  term commands / text.
 
-					number_length = sprintf(restricted_lines, "%d", user->vt.av[i]);  //  Get the char* representing the number of lines
-					//////  End string creation
+					//write(user->fd, "\033[", 2);
+					waddstr(w->win, "\033[");
 
-					write(user->fd, restricted_lines, number_length);
+					for(i=0; user->vt.av[i] > 0; ++i) {
+						//////  Create string from number
+						int number_length;
+						int j;
+						char restricted_lines[10];  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
 
-					if(user->vt.av[i+1] > 0) //not the last argument
-						write(user->fd, ";", 1);
+						for(j=0; j < 10; ++j)
+							restricted_lines[j] = '\0';
+
+						number_length = sprintf(restricted_lines, "%d", user->vt.av[i]);  //  Get the char* representing the number of lines
+						//////  End string creation
+
+						//write(user->fd, restricted_lines, number_length);
+						waddstr(w->win, restricted_lines);
+
+						if(user->vt.av[i+1] > 0) { //not the last argument
+							//write(user->fd, ";", 1);
+							waddstr(w->win, ";");
+						}
+					}
+
+					//write(user->fd, "m", 1);
+					waddstr(w->win, "m");
+				}
+				else { //SGR() (no arguments - reset formatting)
+					//write(user->fd, "\033[m", 3);
+					waddstr(w->win, "\033[m");
 				}
 
-				write(user->fd, "m", 1);
-			}
-			else { //SGR() (no arguments - reset formatting)
-				write(user->fd, "\033[m", 3);
+				set_cooked_curses();
 			}
 		}
 
