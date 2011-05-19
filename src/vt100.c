@@ -290,13 +290,13 @@ vt100_process(user, data)
 				if(user->vt.av[0] > 0) {
 					if(user->vt.av[0] >= 30 && user->vt.av[0] <= 37) {
 						//  Set foreground color
-						init_pair(1, user->vt.av[0]-30, -1);  //  default background color
+						init_pair(1, user->vt.av[0]-30, COLOR_BLACK);  //  default background color
 						attron(COLOR_PAIR(1));
 						color_set = 1;
 					}
 					else if(user->vt.av[0] >= 40 && user->vt.av[0] <= 47) {
 						//  Set background color
-						init_pair(1, -1, user->vt.av[0]-40);  //  default foreground color
+						init_pair(1, COLOR_WHITE, user->vt.av[0]-40);  //  default foreground color
 						attron(COLOR_PAIR(1));
 						color_set = 1;
 					}
