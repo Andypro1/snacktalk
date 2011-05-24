@@ -215,7 +215,28 @@ curses_start()
 	if(def_flags & FL_COLOR) {
 		start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
 		use_default_colors();  //  avoids curses color silliness
+
+		init_pair(30, COLOR_BLACK, -1);
 	}
+
+//	P s = 3 0 ? Set foreground color to Black.
+//P s = 3 1 ? Set foreground color to Red.
+//P s = 3 2 ? Set foreground color to Green.
+//P s = 3 3 ? Set foreground color to Yellow.
+//P s = 3 4 ? Set foreground color to Blue.
+//P s = 3 5 ? Set foreground color to Magenta.
+//P s = 3 6 ? Set foreground color to Cyan.
+//P s = 3 7 ? Set foreground color to White.
+//P s = 3 9 ? Set foreground color to default (original).
+//P s = 4 0 ? Set background color to Black.
+//P s = 4 1 ? Set background color to Red.
+//P s = 4 2 ? Set background color to Green.
+//P s = 4 3 ? Set background color to Yellow.
+//P s = 4 4 ? Set background color to Blue.
+//P s = 4 5 ? Set background color to Magenta.
+//P s = 4 6 ? Set background color to Cyan.
+//P s = 4 7 ? Set background color to White.
+//P s = 4 9 ? Set background color to default (original).
 
 	noraw();
 	crmode();
