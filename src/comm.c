@@ -1297,8 +1297,8 @@ process_gt:
 		}
 	}
 
-	if(color_used == 1)
-		attroff(COLOR_PAIR(1));
+	if(color_used == 1)  //  reset colors for next input
+		attron(COLOR_PAIR(39));
 
 	flush_term(user);
 }

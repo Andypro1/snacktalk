@@ -288,16 +288,8 @@ vt100_process(user, data)
 		if(def_flags & FL_COLOR) { //may as well use this flag for something
 			if(user->vt.got_esc == 2) {
 				if(user->vt.av[0] > 0) {
-					if(user->vt.av[0] >= 30 && user->vt.av[0] <= 37) {
-						//  Set foreground color
-						init_pair(user->vt.av[0]-30+1, user->vt.av[0]-30, -1);  //  default background color
-						attron(COLOR_PAIR(user->vt.av[0]-30+1));
-						is_color_set = 1;
-					}
-					else if(user->vt.av[0] >= 40 && user->vt.av[0] <= 47) {
-						//  Set background color
-						init_pair(user->vt.av[0]-30+1, -1, user->vt.av[0]-40);  //  default foreground color
-						attron(COLOR_PAIR(user->vt.av[0]-30+1));
+					if(user->vt.av[0] >= 30 && user->vt.av[0] <= 49) { //turn color pair on
+						attron(COLOR_PAIR(user->vt.av[0]));
 						is_color_set = 1;
 					}
 
@@ -336,7 +328,7 @@ vt100_process(user, data)
 				else { //SGR() (no arguments - reset formatting)
 					//write(user->fd, "\033[m", 3);
 					//add_raw_term_sequence_term(user, "\033[m");
-					attroff(COLOR_PAIR(user->vt.av[0]-30+1));
+					attron(COLOR_PAIR(39));
 				}
 			}
 		}
