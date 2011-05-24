@@ -216,27 +216,27 @@ curses_start()
 		start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
 		use_default_colors();  //  avoids curses color silliness
 
+		//  Set curses color pairs up and map them to
+		//  the xterm Character Attributes (SGR) codes received by the shell
 		init_pair(30, COLOR_BLACK, -1);
+		init_pair(31, COLOR_RED, -1);
+		init_pair(32, COLOR_GREEN, -1);
+		init_pair(33, COLOR_YELLOW, -1);
+		init_pair(34, COLOR_BLUE, -1);
+		init_pair(35, COLOR_MAGENTA, -1);
+		init_pair(36, COLOR_CYAN, -1);
+		init_pair(37, COLOR_WHITE, -1);
+		init_pair(39, -1, -1);
+		init_pair(40, -1, COLOR_BLACK);
+		init_pair(41, -1, COLOR_RED);
+		init_pair(42, -1, COLOR_GREEN);
+		init_pair(43, -1, COLOR_YELLOW);
+		init_pair(44, -1, COLOR_BLUE);
+		init_pair(45, -1, COLOR_MAGENTA);
+		init_pair(46, -1, COLOR_CYAN);
+		init_pair(47, -1, COLOR_WHITE);
+		init_pair(49, -1, -1);
 	}
-
-//	P s = 3 0 ? Set foreground color to Black.
-//P s = 3 1 ? Set foreground color to Red.
-//P s = 3 2 ? Set foreground color to Green.
-//P s = 3 3 ? Set foreground color to Yellow.
-//P s = 3 4 ? Set foreground color to Blue.
-//P s = 3 5 ? Set foreground color to Magenta.
-//P s = 3 6 ? Set foreground color to Cyan.
-//P s = 3 7 ? Set foreground color to White.
-//P s = 3 9 ? Set foreground color to default (original).
-//P s = 4 0 ? Set background color to Black.
-//P s = 4 1 ? Set background color to Red.
-//P s = 4 2 ? Set background color to Green.
-//P s = 4 3 ? Set background color to Yellow.
-//P s = 4 4 ? Set background color to Blue.
-//P s = 4 5 ? Set background color to Magenta.
-//P s = 4 6 ? Set background color to Cyan.
-//P s = 4 7 ? Set background color to White.
-//P s = 4 9 ? Set background color to default (original).
 
 	noraw();
 	crmode();
