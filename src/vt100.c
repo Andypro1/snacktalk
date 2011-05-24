@@ -287,11 +287,11 @@ vt100_process(user, data)
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
 			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 49) { //SGR(30) through SGR(49) turn color pair on
-				attron(COLOR_PAIR(user->vt.av[0]));
+				color_term(user, user->vt.av[0]);
 				is_color_set = 1;
 			}
 			else if(user->vt.av[0] == 0) { //SGR() (no arguments - reset formatting)
-				attron(COLOR_PAIR(39));
+				color_term(user, 39);
 			}
 
 			//  TODO: Find or create a term function (not write) that can simply write() non-printable

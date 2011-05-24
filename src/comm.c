@@ -1298,7 +1298,7 @@ process_gt:
 	}
 
 	if(color_used == 1)  //  reset colors for next input
-		attron(COLOR_PAIR(39));
+		color_term(user, 39);
 
 	flush_term(user);
 }

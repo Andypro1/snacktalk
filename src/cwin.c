@@ -586,16 +586,14 @@ redisplay_curses()
 }
 
 void
-add_raw_term_sequence_curses(user, str)
+color_curses(user, pairID)
 	register yuser *user;
-	register char *str;
+	register int pairID;
 {
 	register ywin *w;
 
 	w = (ywin *) (user->term);
-	cbreak();
-	waddstr(w->win, str);
-	nocbreak();
+	wattron(w->win, COLOR_PAIR(pairID));
 }
 
 /*

@@ -1238,11 +1238,11 @@ raw_term(user, y, x, str, len)
 //  to a window.  Currently used to handle character formatting without
 //  the mess of the curses library.
 void
-add_raw_term_sequence_term(user, str)
+color_term(user, pairID)
 	yuser *user;
-	char *str;
+	int pairID;
 {
-	add_raw_term_sequence_curses(user, str);
+	color_curses(user, pairID);
 }
 
 int
