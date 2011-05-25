@@ -607,7 +607,7 @@ format_curses(user, sgrID)
 
 	switch(sgrID) {
 	case 0: //Normal
-		wattrset(A_NORMAL);
+		wattrset(w->win, A_NORMAL);
 		break;
 	case 1: //Bold
 		wattron(w->win, A_BOLD);
