@@ -1182,7 +1182,7 @@ show_input(user, buf, len)
 	register ychar *buf;
 	register int len;
 {
-	int color_used = 0;
+	int formatting_used = 0;
 
 	if (user->vt.got_esc) {
 process_esc:
@@ -1195,7 +1195,7 @@ process_esc:
 			else if (user->vt.got_esc == 39) {  //  This special ESC value means that
 				//  color has been used in this set of input and should be reset
 				//  to defaults before the terminal is flushed.
-				int color_used = 1;
+				int formatting_used = 1;
 				user->vt.got_esc = 0;
 				len--, buf++;
 				break;
@@ -1297,8 +1297,8 @@ process_gt:
 		}
 	}
 
-	if(color_used == 1)  //  reset colors for next input
-		color_term(user, 39);
+	if(formatting_used == 1)  //  reset colors for next input
+		format_term(user, 0);
 
 	flush_term(user);
 }

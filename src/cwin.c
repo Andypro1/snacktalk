@@ -596,6 +596,54 @@ color_curses(user, pairID)
 	wattron(w->win, COLOR_PAIR(pairID));
 }
 
+void
+format_curses(user, sgrID)
+	register yuser *user;
+	register int sgrID;
+{
+	register ywin *w;
+
+	w = (ywin *) (user->term);
+
+	switch(sgrID) {
+	case 0: //Normal
+		wattrset(A_NORMAL);
+		break;
+	case 1: //Bold
+		wattron(w->win, A_BOLD);
+		break;
+	case 4: //Underlined
+		wattron(w->win, A_UNDERLINE);
+		break;
+	case 5: //Blink
+		wattron(w->win, A_BLINK);
+		break;
+	case 7: //Inverse
+		wattron(w->win, A_REVERSE);
+		break;
+	case 8: //Invisible (VT300)
+		wattron(w->win, A_INVIS);
+		break;
+	case 22: //Normal (neither bold nor faint)
+		wattroff(w->win, A_BOLD);
+		break;
+	case 24: //Not underlined
+		wattroff(w->win, A_UNDERLINE);
+		break;
+	case 25: //Steady (not blinking)
+		wattroff(w->win, A_BLINK);
+		break;
+	case 27: //Positive (not inverse)
+		wattroff(w->win, A_REVERSE);
+		break;
+	case 28: //Visible (not hidden) (VT300)
+		wattroff(w->win, A_INVIS);
+		break;
+	default:
+		break;
+	}
+}
+
 /*
  * Set raw mode.
  */

@@ -27,7 +27,7 @@ vt100_process(user, data)
 	char data;
 {
 	int i;
-	int is_color_set = 0;
+	int is_formatting_set = 0;
 
 	if (data >= '0' && data <= '9') {
 		if (user->vt.got_esc > 1) {
@@ -288,47 +288,30 @@ vt100_process(user, data)
 		if(user->vt.got_esc == 2) {
 			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 49) { //SGR(30) through SGR(49) turn color pair on
 				color_term(user, user->vt.av[0]);
-				is_color_set = 1;
+				is_formatting_set = 1;
+			}
+			else if(user->vt.av[0] >= 1 && user->vt.av[0] <= 28) {
+				format_term(user, user->vt.av[0]);
+				is_formatting_set = 1;
 			}
 			else if(user->vt.av[0] == 0) { //SGR() (no arguments - reset formatting)
-				color_term(user, 39);
+				//color_term(user, 39);
+				format_term(user, 0);
 			}
 
-			//  TODO: Find or create a term function (not write) that can simply write() non-printable
-			//  messages like vtxxx control sequences as output in the correct location.  Then when ncurses' flush_term()
-			//  is called, the non-printable messages will be written out in the correct order like the rest of the
-			//  term commands / text.
-
-			//write(user->fd, "\033[", 2);
-			//add_raw_term_sequence_term(user, "\033[");
-
-			//for(i=0; user->vt.av[i] > 0; ++i) {
-			//	//////  Create string from number
-			//	int number_length;
-			//	int j;
-			//	char restricted_lines[10];  //  holds the itoa() conversion - use char[10] on the stack to hold any int value to be safe
-
-			//	for(j=0; j < 10; ++j)
-			//		restricted_lines[j] = '\0';
-
-			//	number_length = sprintf(restricted_lines, "%d", user->vt.av[i]);  //  Get the char* representing the number of lines
-			//	//////  End string creation
-
-			//	//write(user->fd, restricted_lines, number_length);
-			//	add_raw_term_sequence_term(user, restricted_lines);
-
-			//	if(user->vt.av[i+1] > 0) { //not the last argument
-			//		//write(user->fd, ";", 1);
-			//		add_raw_term_sequence_term(user, ";");
-			//	}
-			//}
-
-			//write(user->fd, "m", 1);
-			//add_raw_term_sequence_term(user, "m");
+			//  Handle second SGR() argument, if any
+			if(user->vt.av[1] >= 30 && user->vt.av[1] <= 49) { //SGR(30) through SGR(49) turn color pair on
+				color_term(user, user->vt.av[1]);
+				is_formatting_set = 1;
+			}
+			else if(user->vt.av[1] >= 1 && user->vt.av[1] <= 28) {
+				format_term(user, user->vt.av[1]);
+				is_formatting_set = 1;
+			}
 		}
 
-		if(is_color_set == 1) { //instruct term that we used color
-			is_color_set = 0;
+		if(is_formatting_set == 1) { //instruct term that we used color
+			is_formatting_set = 0;
 			user->vt.got_esc = 39;
 		}
 		else {

@@ -1234,15 +1234,22 @@ raw_term(user, y, x, str, len)
 	}
 }
 
-//  A function used to bypass curses and write raw terminal sequences
-//  to a window.  Currently used to handle character formatting without
-//  the mess of the curses library.
+//  Apply colors through curses color pairs
 void
 color_term(user, pairID)
 	yuser *user;
 	int pairID;
 {
 	color_curses(user, pairID);
+}
+
+//  Apply curses formatting through SGR() commands
+void
+format_term(user, sgrID)
+	yuser *user;
+	int sgrID;
+{
+	format_curses(user, sgrID);
 }
 
 int
