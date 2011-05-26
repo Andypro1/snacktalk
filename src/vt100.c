@@ -64,7 +64,9 @@ vt100_process(user, data)
 		user->vt.hash = 1;
 		break;
 	case 'c':
-		write(user->fd, "\033[0c", 4);
+		//  I am a service class 2 terminal (62) with 132 columns (1), printer port (2), selective erase (6),
+		//  DRCS (7), UDK (8), and I support 7-bit national replacement character sets (9).
+		write(user->fd, "\033[62;1;2;6;7;8;9c", 4);
 		user->vt.got_esc = 0;
 		break;
 	case 8:
