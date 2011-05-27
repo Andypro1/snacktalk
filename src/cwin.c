@@ -96,7 +96,11 @@ make_win(w, height, width, row, col)
 	w->width = width;
 	w->row = row;
 	w->col = col;
+
+	//  Set new window curses options
 	scrollok(w->win, FALSE);
+	idlok(w->win, TRUE);  //  Added by ap: let's allow curses to use the line editing commands
+
 	wmove(w->win, 0, 0);
 }
 
