@@ -104,6 +104,8 @@ make_win(w, height, width, row, col)
 	wmove(w->win, 0, 0);
 }
 
+//  Updated to use the curses line-drawing constants instead of hyphens
+//  for terminals that support it
 static void
 draw_title(w)
 	ywin *w;
@@ -122,7 +124,7 @@ draw_title(w)
 	for (; x < pad - 2; x++)
 		addch(ACS_HLINE);
 	if (pad >= 2) {
-		addch(ACS_RARROW);
+		addch('=');
 		addch(' ');
 		x += 2;
 	}
@@ -130,7 +132,7 @@ draw_title(w)
 		addch(*t);
 	if (pad >= 2) {
 		addch(' ');
-		addch(ACS_LARROW);
+		addch('=');
 		x += 2;
 	}
 	for (; x < w->width; x++)
@@ -493,6 +495,17 @@ addch_curses(user, c)
 	waddch(w->win, c);
 	if (x >= COLS - 1)
 		wmove(w->win, y, x);
+}
+
+void
+insert_line_curses(user, step)
+	register yuser *user;
+	int step;
+{
+	register ywin *w;
+
+	w = (ywin *)(user->term);
+	winsdelln(w->win, step);  //  Inserts lines if step is positive and deletes lines if step is negative
 }
 
 void

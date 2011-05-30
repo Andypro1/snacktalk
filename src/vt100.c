@@ -215,8 +215,8 @@ vt100_process(user, data)
 		user->vt.got_esc = 0;
 		break;
 	case 'J': //ED
-		if (user->vt.got_esc == 2) {
-			switch (user->vt.av[0]) {
+		if(user->vt.got_esc == 2) {
+			switch(user->vt.av[0]) {
 			case 1: //Erase Above
 				if(user->x > 0)
 					fill_term(user, 0, 0, user->y - 1, user->cols - 1, ' ');
@@ -227,16 +227,17 @@ vt100_process(user, data)
 			case 2: //Erase All
 				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');  //  Clear snacktalk's user screen buffer
 				erase_curses(user);											 //  But issue simple clear call to curses
-				//redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
-			default:
+			case 0:
+			default: //Erase Below
 				clreos_term(user);
 			}
 		}
+
 		user->vt.got_esc = 0;
 		break;
 	case 'K':
-		if (user->vt.got_esc == 2) {
+		if(user->vt.got_esc == 2) {
 			switch (user->vt.av[0]) {
 			case 0:		/* clear to end of line */
 				clreol_term(user);
@@ -253,26 +254,38 @@ vt100_process(user, data)
 		}
 		user->vt.got_esc = 0;
 		break;
-	case 'L':
-		if (user->vt.got_esc == 2) {	/* add line */
-			if (user->vt.av[0] == 0)
-				add_line_term(user, 1);
+	case 'L': //Insert Lines (IL)
+		if(user->vt.got_esc == 2) {	/* add line */
+			//if (user->vt.av[0] == 0)
+			//	add_line_term(user, 1);
+			//else
+			//	add_line_term(user, user->vt.av[0]);
+			if(user->vt.av[0] == 0)
+				insert_lines_term(user, 1);
 			else
-				add_line_term(user, user->vt.av[0]);
+				insert_lines_term(user, user->vt.av[0]);
 		}
+
 		user->vt.got_esc = 0;
 		break;
 	case 'M':
-		if (user->vt.got_esc == 2) {	/* delete line */
-			if (user->vt.av[0] == 0)
-				del_line_term(user, 1);
+		if(user->vt.got_esc == 2) {	//Delete Lines (DL)
+			//if(user->vt.av[0] == 0)
+			//	del_line_term(user, 1);
+			//else
+			//	del_line_term(user, user->vt.av[0]);
+			if(user->vt.av[0] == 0)
+				delete_lines_term(user, 1);
 			else
-				del_line_term(user, user->vt.av[0]);
-		} else		/* reverse scroll */
-			if (user->y > user->sc_top)
+				delete_lines_term(user, user->vt.av[0]);
+		}
+		else { //Reverse Index (RI)
+			if(user->y > user->sc_top)
 				user->y--;
 			else
 				rev_scroll_term(user);
+		}
+
 		user->vt.got_esc = 0;
 		break;
 	case 'P':

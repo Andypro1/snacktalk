@@ -621,6 +621,65 @@ add_line_term(user, num)
 	}
 }
 
+//  Updates the scr buffer and calls the proper curses function.
+//  Since idlok() is called on window creation, this should invoke
+//  the hardware IL command
+void
+insert_lines_term(user, num)
+	register yuser *user;
+	int num;
+{
+	register ychar *c;
+	register int i;
+
+	/* find number of remaining lines */
+	i = user->rows - user->y - num;
+
+	/* swap the remaining lines to bottom */
+	for(i--; i >= 0; i--) {
+		c = user->scr[user->y + i];
+		user->scr[user->y + i] = user->scr[user->y + i + num];
+		user->scr[user->y + i + num] = c;
+	}
+
+	/* clear the added lines */
+	for(num--; num >= 0; num--) {
+		c = user->scr[user->y + num];
+		for(i = 0; i < user->cols; i++)
+			*(c++) = ' ';
+	}
+
+	insert_line_curses(user, num);
+}
+
+void
+delete_lines_term(user, num)
+	register yuser *user;
+	int num;
+{
+	register ychar *c;
+	register int i;
+
+	/* find number of remaining lines */
+	i = user->rows - user->y - num;
+
+	/* swap the remaining lines to top */
+	for(; i > 0; i--) {
+		c = user->scr[user->rows - i];
+		user->scr[user->rows - i] = user->scr[user->rows - i - num];
+		user->scr[user->rows - i - num] = c;
+	}
+
+	/* clear the remaining bottom lines */
+	for(; num > 0; num--) {
+		c = user->scr[user->rows - num];
+		for (i = 0; i < user->cols; i++)
+			*(c++) = ' ';
+	}
+
+	insert_line_curses(user, 0-num);
+}
+
 /*
  * Delete lines.
  */
