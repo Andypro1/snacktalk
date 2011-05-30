@@ -384,7 +384,7 @@ scroll_term(user)
 		    && user->sc_bot == user->rows - 1)
 			scroll_curses(user);
 		else
-			redraw_term(user, 0);
+			redraw_term(user, 0);  //TODO:  This should never be needed here.  Fix the logic.
 	} else {
 		sy = user->y;
 		sx = user->x;
@@ -412,7 +412,7 @@ rev_scroll_term(user)
 		user->scr[user->sc_top] = c;
 		for (i = 0; i < user->cols; i++)
 			*(c++) = ' ';
-		redraw_term(user, 0);
+		redraw_term(user, 0);  //TODO:  This should never be needed.  Fix the logic (is rev_scroll_term() ever used though?)
 	} else {
 		sy = user->y;
 		sx = user->x;
@@ -759,31 +759,39 @@ redraw_term(user, y)
 	register int x, spaces;
 	register ychar *c;
 
-	for (; y < user->t_rows; y++) {
+	for(; y < user->t_rows; y++) {
+		//  Clear this entire line and redraw it in the loop below
 		move_curses(user, y, 0);
 		clreol_curses(user);
 		spaces = 0;
 		c = user->scr[y];
-		for (x = 0; x < user->t_cols; x++, c++) {
-			if (*c == ' ')
+
+		for(x = 0; x < user->t_cols; x++, c++) {
+			//  Redraw this character.  Count consecutive spaces encoutered
+			//  and issue a move_curses() command if there are more than three.
+			//  Otherwise, just draw the spaces
+			if(*c == ' ') {
 				spaces++;
+			}
 			else {
-				if (spaces) {
-					if (spaces <= 3) {	/* arbitrary */
-						for (; spaces > 0; spaces--)
+				if(spaces) {
+					if(spaces <= 3) {	/* arbitrary */
+						for(; spaces > 0; spaces--)
 							addch_curses(user, ' ');
-					} else {
+					}
+					else {
 						move_curses(user, y, x);
 						spaces = 0;
 					}
 				}
+
 				addch_curses(user, *c);
 			}
 		}
 	}
 
 	/* redisplay any active menu */
-	if (menu_ptr != NULL)
+	if(menu_ptr != NULL)
 		update_menu();
 	else
 		move_curses(user, user->y, user->x);

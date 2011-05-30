@@ -34,9 +34,9 @@ vt100_process(user, data)
 			user->vt.av[user->vt.ac] = (user->vt.av[user->vt.ac] * 10) + (data - '0');
 			return;
 		}
-		if (user->vt.hash == 1 && data == '8') {
+		if (user->vt.hash == 1 && data == '8') { //DECALN - This sequence fills the screen with uppercase E's
 			fill_term(user, 0, 0, user->rows - 1, user->cols - 1, 'E');
-			redraw_term(user, 0);
+			redraw_term(user, 0);  //  This redraw_term() call is fine
 			user->vt.got_esc = 0;
 			return;
 		}
@@ -214,18 +214,20 @@ vt100_process(user, data)
 		}
 		user->vt.got_esc = 0;
 		break;
-	case 'J':
+	case 'J': //ED
 		if (user->vt.got_esc == 2) {
 			switch (user->vt.av[0]) {
-			case 1:
-				if (user->x > 0)
+			case 1: //Erase Above
+				if(user->x > 0)
 					fill_term(user, 0, 0, user->y - 1, user->cols - 1, ' ');
+
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
-				redraw_term(user, 0);
+				redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
-			case 2:
-				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');
-				redraw_term(user, 0);
+			case 2: //Erase All
+				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');  //  Clear snacktalk's user screen buffer
+				werase(user->term);										     //  But issue simple clear call to curses
+				//redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
 			default:
 				clreos_term(user);
@@ -241,11 +243,11 @@ vt100_process(user, data)
 				break;
 			case 1:		/* clear to beginning of line */
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
-				redraw_term(user, 0);
+				redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
 			case 2:		/* clear entire line */
 				fill_term(user, user->y, 0, user->y, user->cols - 1, ' ');
-				redraw_term(user, 0);
+				redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
 			}
 		}
