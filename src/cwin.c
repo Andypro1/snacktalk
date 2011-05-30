@@ -120,9 +120,9 @@ draw_title(w)
 	move(w->row - 1, w->col);
 	x = 0;
 	for (; x < pad - 2; x++)
-		addch('-');
+		addch(ACS_HLINE);
 	if (pad >= 2) {
-		addch('=');
+		addch(ACS_RARROW);
 		addch(' ');
 		x += 2;
 	}
@@ -130,7 +130,7 @@ draw_title(w)
 		addch(*t);
 	if (pad >= 2) {
 		addch(' ');
-		addch('=');
+		addch(ACS_LARROW);
 		x += 2;
 	}
 	for (; x < w->width; x++)
