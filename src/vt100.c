@@ -28,7 +28,7 @@ vt100_process(user, data)
 {
 	int i;
 	int is_formatting_set = 0;
-	ywin *w;
+	register ywin *w;
 
 	w = (ywin *)(user->term);
 
