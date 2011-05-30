@@ -113,7 +113,7 @@ draw_title(w)
 
 	if ((int) strlen(w->title) > w->width) {
 		for (x = 0; x < w->width; x++)
-			addch('-');
+			addch(ACS_HLINE);
 		return;
 	}
 	pad = (w->width - strlen(w->title)) / 2;
@@ -134,7 +134,7 @@ draw_title(w)
 		x += 2;
 	}
 	for (; x < w->width; x++)
-		addch('-');
+		addch(ACS_HLINE);
 }
 
 /*
@@ -504,6 +504,16 @@ move_curses(user, y, x)
 
 	w = (ywin *) (user->term);
 	wmove(w->win, y, x);
+}
+
+void
+erase_curses(user)
+	register yuser *user;
+{
+	register ywin *w;
+
+	w = (ywin *) (user->term);
+	werase(w->win);
 }
 
 void

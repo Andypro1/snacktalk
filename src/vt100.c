@@ -28,9 +28,6 @@ vt100_process(user, data)
 {
 	int i;
 	int is_formatting_set = 0;
-	register ywin *w;
-
-	w = (ywin *)(user->term);
 
 	if (data >= '0' && data <= '9') {
 		if (user->vt.got_esc > 1) {
@@ -229,7 +226,7 @@ vt100_process(user, data)
 				break;
 			case 2: //Erase All
 				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');  //  Clear snacktalk's user screen buffer
-				werase(w->win);												 //  But issue simple clear call to curses
+				erase_curses(user);											 //  But issue simple clear call to curses
 				//redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
 			default:
