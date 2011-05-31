@@ -34,12 +34,13 @@
 #include "cwin.h"
 
 typedef struct _ywin {
-	struct _ywin *next;	/* next ywin in linked list */
-	yuser *user;		/* user pointer */
-	WINDOW *win;		/* window pointer */
-	int height, width;	/* height and width in characters */
-	int row, col;		/* row and column position on screen */
-	char *title;		/* window title string */
+	struct _ywin *next;		/* next ywin in linked list */
+	yuser *user;			/* user pointer */
+	WINDOW *win;			/* window pointer */
+	int height, width;		/* height and width in characters */
+	int row, col;			/* row and column position on screen */
+	int fgcolor, bgcolor;	//  Current color draw attributes
+	char *title;			/* window title string */
 } ywin;
 
 static ywin *head;		/* head of linked list */
@@ -96,12 +97,14 @@ make_win(w, height, width, row, col)
 	w->width = width;
 	w->row = row;
 	w->col = col;
+	w->fgcolor = -1;  //  curses defaults
+	w->bgcolor = -1;
 
 	//  Set new window curses options
 	scrollok(w->win, FALSE);
 	idlok(w->win, TRUE);  //  Added by ap: let's allow curses to use the line editing commands
 
-	wmove(w->win, 0, 0);
+	wmove(w->win, 0, 0);  //  position cursor
 }
 
 //  Updated to use the curses line-drawing constants instead of hyphens
@@ -613,14 +616,30 @@ redisplay_curses()
 }
 
 void
-color_curses(user, pairID)
+color_curses(user, colorID, isBg)
 	register yuser *user;
-	register int pairID;
+	register int colorID;
+	register int isBg;
 {
 	register ywin *w;
 
 	w = (ywin *) (user->term);
-	wattron(w->win, COLOR_PAIR(pairID));
+	
+	if(isBg)
+		w.bgcolor = colorID;
+	else
+		w.fgcolor = colorID;
+
+	if(w.fgcolor == -1 || w.bgcolor == -1) { //use a color pair preset defined on init
+		if(isBg)
+			wattron(w->win, COLOR_PAIR(pairID+40));
+		else
+			wattron(w->win, COLOR_PAIR(pairID+30));
+	}
+	else { //init a custom color pair with the window's current fg and bg colors
+		init_pair(100, w.fgcolor, w.bgcolor);
+		wattron(w->win, COLOR_PAIR(100));
+	}
 }
 
 void
@@ -634,6 +653,8 @@ format_curses(user, sgrID)
 
 	switch(sgrID) {
 	case 0: //Normal
+		w.fgcolor = -1;
+		w.bgcolor = -1;
 		wattrset(w->win, A_NORMAL);
 		break;
 	case 1: //Bold

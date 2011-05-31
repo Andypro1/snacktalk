@@ -255,11 +255,7 @@ vt100_process(user, data)
 		user->vt.got_esc = 0;
 		break;
 	case 'L': //Insert Lines (IL)
-		if(user->vt.got_esc == 2) {	/* add line */
-			//if (user->vt.av[0] == 0)
-			//	add_line_term(user, 1);
-			//else
-			//	add_line_term(user, user->vt.av[0]);
+		if(user->vt.got_esc == 2) {
 			if(user->vt.av[0] == 0)
 				insert_lines_term(user, 1);
 			else
@@ -270,10 +266,6 @@ vt100_process(user, data)
 		break;
 	case 'M':
 		if(user->vt.got_esc == 2) {	//Delete Lines (DL)
-			//if(user->vt.av[0] == 0)
-			//	del_line_term(user, 1);
-			//else
-			//	del_line_term(user, user->vt.av[0]);
 			if(user->vt.av[0] == 0)
 				delete_lines_term(user, 1);
 			else
@@ -303,8 +295,12 @@ vt100_process(user, data)
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
-			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 49) { //SGR(30) through SGR(49) turn color pair on
-				color_term(user, user->vt.av[0]);
+			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 39) { //foreground color
+				color_term(user, user->vt.av[0]-30, 0);
+				is_formatting_set = 1;
+			}
+			else if(user->vt.av[0] >= 40 && user->vt.av[0] <= 49) { //background color
+				color_term(user, user->vt.av[0]-40, 1);
 				is_formatting_set = 1;
 			}
 			else if(user->vt.av[0] >= 1 && user->vt.av[0] <= 28) {
@@ -312,13 +308,16 @@ vt100_process(user, data)
 				is_formatting_set = 1;
 			}
 			else if(user->vt.av[0] == 0) { //SGR() (no arguments - reset formatting)
-				//color_term(user, 39);
 				format_term(user, 0);
 			}
 
 			//  Handle second SGR() argument, if any
-			if(user->vt.av[1] >= 30 && user->vt.av[1] <= 49) { //SGR(30) through SGR(49) turn color pair on
-				color_term(user, user->vt.av[1]);
+			if(user->vt.av[1] >= 30 && user->vt.av[1] <= 39) { //foreground color
+				color_term(user, user->vt.av[1]-30, 0);
+				is_formatting_set = 1;
+			}
+			else if(user->vt.av[1] >= 40 && user->vt.av[1] <= 49) { //background color
+				color_term(user, user->vt.av[1]-40, 1);
 				is_formatting_set = 1;
 			}
 			else if(user->vt.av[1] >= 1 && user->vt.av[1] <= 28) {

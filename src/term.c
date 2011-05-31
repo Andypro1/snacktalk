@@ -579,48 +579,6 @@ newline_term(user)
 	}
 }
 
-/*
- * Insert lines.
- */
-void
-add_line_term(user, num)
-	register yuser *user;
-	int num;
-{
-	register ychar *c;
-	register int i;
-
-	if (num == 1 && user->y == 0)
-		rev_scroll_term(user);
-	else {
-
-		/* find number of remaining lines */
-		i = user->rows - user->y - num;
-		if (i <= 0) {
-			i = user->x;
-			move_term(user, user->y, 0);
-			clreos_term(user);
-			move_term(user, user->y, i);
-			return;
-		}
-
-		/* swap the remaining lines to bottom */
-		for (i--; i >= 0; i--) {
-			c = user->scr[user->y + i];
-			user->scr[user->y + i] = user->scr[user->y + i + num];
-			user->scr[user->y + i + num] = c;
-		}
-
-		/* clear the added lines */
-		for (num--; num >= 0; num--) {
-			c = user->scr[user->y + num];
-			for (i = 0; i < user->cols; i++)
-				*(c++) = ' ';
-		}
-		redraw_term(user, user->y);
-	}
-}
-
 //  Updates the scr buffer and calls the proper curses function.
 //  Since idlok() is called on window creation, this should invoke
 //  the hardware IL command
@@ -707,47 +665,6 @@ delete_lines_term(user, num)
 
 		insert_line_curses(user, count);
 	}	
-}
-
-/*
- * Delete lines.
- */
-void
-del_line_term(user, num)
-	register yuser *user;
-	int num;
-{
-	register ychar *c;
-	register int i;
-
-	if (num == 1 && user->y == 0)
-		scroll_term(user);
-	else {
-		/* find number of remaining lines */
-		i = user->rows - user->y - num;
-		if (i <= 0) {
-			i = user->x;
-			move_term(user, user->y, 0);
-			clreos_term(user);
-			move_term(user, user->y, i);
-			return;
-		}
-
-		/* swap the remaining lines to top */
-		for (; i > 0; i--) {
-			c = user->scr[user->rows - i];
-			user->scr[user->rows - i] = user->scr[user->rows - i - num];
-			user->scr[user->rows - i - num] = c;
-		}
-
-		/* clear the remaining bottom lines */
-		for (; num > 0; num--) {
-			c = user->scr[user->rows - num];
-			for (i = 0; i < user->cols; i++)
-				*(c++) = ' ';
-		}
-		redraw_term(user, user->y);
-	}
 }
 
 static void
@@ -1332,11 +1249,12 @@ raw_term(user, y, x, str, len)
 
 //  Apply colors through curses color pairs
 void
-color_term(user, pairID)
+color_term(user, colorID, isBg)
 	yuser *user;
-	int pairID;
+	int colorID;
+	int isBg;
 {
-	color_curses(user, pairID);
+	color_curses(user, colorID, isBg);
 }
 
 //  Apply curses formatting through SGR() commands
