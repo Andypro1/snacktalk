@@ -629,7 +629,7 @@ insert_lines_term(user, num)
 	register yuser *user;
 	int num;
 {
-	//register ychar *c;
+	register ychar *c;
 	register int i;
 	register int j;
 
@@ -660,8 +660,10 @@ insert_lines_term(user, num)
 		}
 
 		if(i < num) { //blank the newly inserted rows
+			c = user->scr[user->y + num];
+
 			for(j=0; j < user->cols; ++j) {
-				user->scr[i+j] = ' ';
+				*(c++) = ' ';
 			}
 		}
 	}
@@ -674,7 +676,7 @@ delete_lines_term(user, num)
 	register yuser *user;
 	int num;
 {
-	//register ychar *c;
+	register ychar *c;
 	register int i;
 	register int j;
 
@@ -698,18 +700,18 @@ delete_lines_term(user, num)
 	num = 0-num;  //  Make the below snackterm code compatible with this implementation
 
 	//  Loop from the cursor row down to the bottom of the scroll region
-	for(var i=user->y; i <= user->rows; ++i) {
+	for(i=user->y; i <= user->rows; ++i) {
 		int srcRow = i - num;
 			
 		if((user->rows-i) >= (0-num)) {
 			//  Shift rows up by -count
 			for(j=0; j < user->cols; ++j) {
-				this.textGrid[i+j] = this.textGrid[srcRow+j];
+				user->scr[i+j] = user->scr[srcRow+j];
 			}
 		}
 		else { //blank new lines on bottom
-			for(j=0; j < this.cols; ++j) {
-				this.textGrid[i+j] = ' ';
+			for(j=0; j < user->cols; ++j) {
+				*(c++) = ' ';
 			}
 		}
 	}
