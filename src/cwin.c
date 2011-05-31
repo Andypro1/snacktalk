@@ -626,18 +626,18 @@ color_curses(user, colorID, isBg)
 	w = (ywin *) (user->term);
 	
 	if(isBg)
-		w.bgcolor = colorID;
+		w->bgcolor = colorID;
 	else
-		w.fgcolor = colorID;
+		w->fgcolor = colorID;
 
-	if(w.fgcolor == -1 || w.bgcolor == -1) { //use a color pair preset defined on init
+	if(w->fgcolor == -1 || w->bgcolor == -1) { //use a color pair preset defined on init
 		if(isBg)
 			wattron(w->win, COLOR_PAIR(pairID+40));
 		else
 			wattron(w->win, COLOR_PAIR(pairID+30));
 	}
 	else { //init a custom color pair with the window's current fg and bg colors
-		init_pair(100, w.fgcolor, w.bgcolor);
+		init_pair(100, w->fgcolor, w->bgcolor);
 		wattron(w->win, COLOR_PAIR(100));
 	}
 }
@@ -653,8 +653,8 @@ format_curses(user, sgrID)
 
 	switch(sgrID) {
 	case 0: //Normal
-		w.fgcolor = -1;
-		w.bgcolor = -1;
+		w->fgcolor = -1;
+		w->bgcolor = -1;
 		wattrset(w->win, A_NORMAL);
 		break;
 	case 1: //Bold
