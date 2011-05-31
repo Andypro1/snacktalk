@@ -631,44 +631,37 @@ insert_lines_term(user, num)
 {
 	register ychar *c;
 	register int i;
-	register int j;
 
-	///* find number of remaining lines */
-	//i = user->rows - user->y - num;  //  bottom - cursor - step
+	if (num == 1 && user->y == 0)
+		rev_scroll_term(user);
+	else {
 
-	///* swap the remaining lines to bottom */
-	//for(i--; i >= 0; i--) {
-	//	c = user->scr[user->y + i];
-	//	user->scr[user->y + i] = user->scr[user->y + i + num];
-	//	user->scr[user->y + i + num] = c;
-	//}
-
-	///* clear the added lines */
-	//for(num--; num >= 0; num--) {
-	//	c = user->scr[user->y + num];
-	//	for(i = 0; i < user->cols; i++)
-	//		*(c++) = ' ';
-	//}
-
-	//  Loop from the bottom of the scroll region back up to the cursor row
-	for(i = user->rows - num; i >= user->y; --i) {
-		int destRow = i + num;
-
-		//  Shift rows down by count
-		for(j=0; j < user->cols; ++j) {
-			user->scr[destRow+j] = user->scr[i+j];
+		/* find number of remaining lines */
+		i = user->rows - user->y - num;
+		if (i <= 0) {
+			i = user->x;
+			move_term(user, user->y, 0);
+			clreos_term(user);
+			move_term(user, user->y, i);
+			return;
 		}
 
-		if(i < num) { //blank the newly inserted rows
+		/* swap the remaining lines to bottom */
+		for (i--; i >= 0; i--) {
+			c = user->scr[user->y + i];
+			user->scr[user->y + i] = user->scr[user->y + i + num];
+			user->scr[user->y + i + num] = c;
+		}
+
+		/* clear the added lines */
+		for (num--; num >= 0; num--) {
 			c = user->scr[user->y + num];
-
-			for(j=0; j < user->cols; ++j) {
+			for (i = 0; i < user->cols; i++)
 				*(c++) = ' ';
-			}
 		}
-	}
 
-	insert_line_curses(user, num);
+		insert_line_curses(user, num);
+	}
 }
 
 void
@@ -678,45 +671,36 @@ delete_lines_term(user, num)
 {
 	register ychar *c;
 	register int i;
-	register int j;
 
-	///* find number of remaining lines */
-	//i = user->rows - user->y - num;
-
-	///* swap the remaining lines to top */
-	//for(; i > 0; i--) {
-	//	c = user->scr[user->rows - i];
-	//	user->scr[user->rows - i] = user->scr[user->rows - i - num];
-	//	user->scr[user->rows - i - num] = c;
-	//}
-
-	///* clear the remaining bottom lines */
-	//for(; num > 0; num--) {
-	//	c = user->scr[user->rows - num];
-	//	for (i = 0; i < user->cols; i++)
-	//		*(c++) = ' ';
-	//}
-
-	num = 0-num;  //  Make the below snackterm code compatible with this implementation
-
-	//  Loop from the cursor row down to the bottom of the scroll region
-	for(i=user->y; i <= user->rows; ++i) {
-		int srcRow = i - num;
-			
-		if((user->rows-i) >= (0-num)) {
-			//  Shift rows up by -count
-			for(j=0; j < user->cols; ++j) {
-				user->scr[i+j] = user->scr[srcRow+j];
-			}
+	if (num == 1 && user->y == 0)
+		scroll_term(user);
+	else {
+		/* find number of remaining lines */
+		i = user->rows - user->y - num;
+		if (i <= 0) {
+			i = user->x;
+			move_term(user, user->y, 0);
+			clreos_term(user);
+			move_term(user, user->y, i);
+			return;
 		}
-		else { //blank new lines on bottom
-			for(j=0; j < user->cols; ++j) {
+
+		/* swap the remaining lines to top */
+		for (; i > 0; i--) {
+			c = user->scr[user->rows - i];
+			user->scr[user->rows - i] = user->scr[user->rows - i - num];
+			user->scr[user->rows - i - num] = c;
+		}
+
+		/* clear the remaining bottom lines */
+		for (; num > 0; num--) {
+			c = user->scr[user->rows - num];
+			for (i = 0; i < user->cols; i++)
 				*(c++) = ' ';
-			}
 		}
-	}
 
-	insert_line_curses(user, num);
+		insert_line_curses(user, 0-num);
+	}	
 }
 
 /*
