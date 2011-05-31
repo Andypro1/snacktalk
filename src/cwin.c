@@ -655,6 +655,7 @@ format_curses(user, sgrID)
 	case 0: //Normal
 		w->fgcolor = -1;
 		w->bgcolor = -1;
+		wattron(w->win, COLOR_PAIR(39));
 		wattrset(w->win, A_NORMAL);
 		break;
 	case 1: //Bold
