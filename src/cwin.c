@@ -637,8 +637,8 @@ color_curses(user, colorID, isBg)
 			wattron(w->win, COLOR_PAIR(colorID+30));
 	}
 	else { //init a custom color pair with the window's current fg and bg colors
-		init_pair(100, w->fgcolor, w->bgcolor);
-		wattron(w->win, COLOR_PAIR(100));
+		init_pair(29, w->fgcolor, w->bgcolor);
+		wattron(w->win, COLOR_PAIR(29));
 	}
 }
 
