@@ -624,8 +624,6 @@ color_curses(user, colorID, isBg)
 	register ywin *w;
 
 	w = (ywin *) (user->term);
-	
-	show_error(COLOR_PAIRS);
 
 	if(isBg)
 		w->bgcolor = colorID;
