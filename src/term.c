@@ -631,6 +631,9 @@ insert_lines_term(user, num)
 {
 	register ychar *c;
 	register int i;
+	int count;
+
+	count = num;  //  Set initial value to pass to curses function
 
 	if (num == 1 && user->y == 0)
 		rev_scroll_term(user);
