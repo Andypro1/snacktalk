@@ -671,6 +671,9 @@ delete_lines_term(user, num)
 {
 	register ychar *c;
 	register int i;
+	int count;
+
+	count = 0-num;  //  Set initial value to pass to curses function
 
 	if (num == 1 && user->y == 0)
 		scroll_term(user);
@@ -699,7 +702,7 @@ delete_lines_term(user, num)
 				*(c++) = ' ';
 		}
 
-		insert_line_curses(user, 0-num);
+		insert_line_curses(user, count);
 	}	
 }
 

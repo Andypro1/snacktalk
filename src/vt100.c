@@ -270,14 +270,14 @@ vt100_process(user, data)
 		break;
 	case 'M':
 		if(user->vt.got_esc == 2) {	//Delete Lines (DL)
-			if(user->vt.av[0] == 0)
-				del_line_term(user, 1);
-			else
-				del_line_term(user, user->vt.av[0]);
 			//if(user->vt.av[0] == 0)
-			//	delete_lines_term(user, 1);
+			//	del_line_term(user, 1);
 			//else
-			//	delete_lines_term(user, user->vt.av[0]);
+			//	del_line_term(user, user->vt.av[0]);
+			if(user->vt.av[0] == 0)
+				delete_lines_term(user, 1);
+			else
+				delete_lines_term(user, user->vt.av[0]);
 		}
 		else { //Reverse Index (RI)
 			if(user->y > user->sc_top)
