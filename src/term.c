@@ -663,7 +663,7 @@ insert_lines_term(user, num)
 				*(c++) = ' ';
 		}
 
-		insert_line_curses(user, num);
+		insert_line_curses(user, count);
 	}
 }
 
