@@ -221,7 +221,7 @@ curses_start()
 		bail(YTE_INIT);
 	}
 
-	if(def_flags & FL_COLOR) {
+	if(!(def_flags & FL_NOCOLOR)) { //unless the user specifically turned color off, do the following
 		start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
 		use_default_colors();  //  avoids curses color silliness
 
@@ -239,24 +239,7 @@ curses_start()
 			}
 		}
 
-		//init_pair(30, COLOR_BLACK, -1);
-		//init_pair(31, COLOR_RED, -1);
-		//init_pair(32, COLOR_GREEN, -1);
-		//init_pair(33, COLOR_YELLOW, -1);
-		//init_pair(34, COLOR_BLUE, -1);
-		//init_pair(35, COLOR_MAGENTA, -1);
-		//init_pair(36, COLOR_CYAN, -1);
-		//init_pair(37, COLOR_WHITE, -1);
-		//init_pair(39, -1, -1);
-		//init_pair(40, -1, COLOR_BLACK);
-		//init_pair(41, -1, COLOR_RED);
-		//init_pair(42, -1, COLOR_GREEN);
-		//init_pair(43, -1, COLOR_YELLOW);
-		//init_pair(44, -1, COLOR_BLUE);
-		//init_pair(45, -1, COLOR_MAGENTA);
-		//init_pair(46, -1, COLOR_CYAN);
-		//init_pair(47, -1, COLOR_WHITE);
-		//init_pair(49, -1, -1);
+		init_pair(81, -1, -1);  //  Make the default color pair last in the list
 	}
 
 	noraw();
@@ -643,7 +626,7 @@ color_curses(user, colorID, isBg)
 		w->fgcolor = colorID;
 
 	if(w->fgcolor == -1 && w->bgcolor == -1) {
-			wattroff(w->win, COLOR_PAIR(0));  //  attempt to remove all color formatting with wattroff()
+		wattron(w->win, COLOR_PAIR(81));
 	}
 	else { //select the color pair with the window's current fg and bg colors
 		wattron(w->win, COLOR_PAIR((w->bgcolor+1)*9+(w->fgcolor+1)));  //  Calculate the index into the pairs list instantiated in curses_start()

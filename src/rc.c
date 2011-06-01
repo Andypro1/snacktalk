@@ -120,9 +120,9 @@ set_option(opt, value)
 		 || strcmp(opt, "pq") == 0)
 		mask |= FL_PROMPTQUIT;
 
-	else if (strcmp(opt, "color") == 0
-		 || strcmp(opt, "colour") == 0)
-		mask |= FL_COLOR;
+	else if (strcmp(opt, "nocolor") == 0
+		 || strcmp(opt, "nocolour") == 0)
+		mask |= FL_NOCOLOR;
 
 	else if (strcmp(opt, "beeps") == 0)
 		mask |= FL_BEEP;
