@@ -27,7 +27,6 @@ vt100_process(user, data)
 	char data;
 {
 	int i;
-	int is_formatting_set = 0;
 
 	if (data >= '0' && data <= '9') {
 		if (user->vt.got_esc > 1) {
@@ -295,45 +294,44 @@ vt100_process(user, data)
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
-			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 39) { //foreground color
+			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 37) { //foreground color
 				color_term(user, user->vt.av[0]-30, 0);
-				is_formatting_set = 1;
 			}
-			else if(user->vt.av[0] >= 40 && user->vt.av[0] <= 49) { //background color
+			else if(user->vt.av[0] >= 40 && user->vt.av[0] <= 47) { //background color
 				color_term(user, user->vt.av[0]-40, 1);
-				is_formatting_set = 1;
 			}
 			else if(user->vt.av[0] >= 1 && user->vt.av[0] <= 28) {
 				format_term(user, user->vt.av[0]);
-				is_formatting_set = 1;
+			}
+			else if(user->vt.av[0] == 39) { //default foreground
+				color_term(user, -1, 1);
+			}
+			else if(user->vt.av[0] == 49) { //default background
+				color_term(user, -1, 1);
 			}
 			else if(user->vt.av[0] == 0) { //SGR() (no arguments - reset formatting)
 				format_term(user, 0);
 			}
 
 			//  Handle second SGR() argument, if any
-			if(user->vt.av[1] >= 30 && user->vt.av[1] <= 39) { //foreground color
+			if(user->vt.av[1] >= 30 && user->vt.av[1] <= 37) { //foreground color
 				color_term(user, user->vt.av[1]-30, 0);
-				is_formatting_set = 1;
 			}
-			else if(user->vt.av[1] >= 40 && user->vt.av[1] <= 49) { //background color
+			else if(user->vt.av[1] >= 40 && user->vt.av[1] <= 47) { //background color
 				color_term(user, user->vt.av[1]-40, 1);
-				is_formatting_set = 1;
+			}
+			else if(user->vt.av[1] == 39) { //default foreground
+				color_term(user, -1, 1);
+			}
+			else if(user->vt.av[1] == 49) { //default background
+				color_term(user, -1, 1);
 			}
 			else if(user->vt.av[1] >= 1 && user->vt.av[1] <= 28) {
 				format_term(user, user->vt.av[1]);
-				is_formatting_set = 1;
 			}
 		}
 
-		if(is_formatting_set == 1) { //instruct term that we used color
-			is_formatting_set = 0;
-			user->vt.got_esc = 39;
-		}
-		else {
-			user->vt.got_esc = 0;
-		}
-
+		user->vt.got_esc = 0;
 		break;
 	case 'r':		/* set scroll region */
 		if (user->vt.got_esc == 2) {
