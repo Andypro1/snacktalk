@@ -227,24 +227,36 @@ curses_start()
 
 		//  Set curses color pairs up and map them to
 		//  the xterm Character Attributes (SGR) codes received by the shell
-		init_pair(30, COLOR_BLACK, -1);
-		init_pair(31, COLOR_RED, -1);
-		init_pair(32, COLOR_GREEN, -1);
-		init_pair(33, COLOR_YELLOW, -1);
-		init_pair(34, COLOR_BLUE, -1);
-		init_pair(35, COLOR_MAGENTA, -1);
-		init_pair(36, COLOR_CYAN, -1);
-		init_pair(37, COLOR_WHITE, -1);
-		init_pair(39, -1, -1);
-		init_pair(40, -1, COLOR_BLACK);
-		init_pair(41, -1, COLOR_RED);
-		init_pair(42, -1, COLOR_GREEN);
-		init_pair(43, -1, COLOR_YELLOW);
-		init_pair(44, -1, COLOR_BLUE);
-		init_pair(45, -1, COLOR_MAGENTA);
-		init_pair(46, -1, COLOR_CYAN);
-		init_pair(47, -1, COLOR_WHITE);
-		init_pair(49, -1, -1);
+		int i, j;
+
+		//  Initialize all possible color pairs.  Term SGR values will go through
+		//  the same algorithm to pick the proper colors.  The sequence is created as follows:
+		//  1: {BLACK, default}, 2: {RED, default}, 3: {GREEN, default}, ..., 78: {MAGENTA, WHITE}, 79: {CYAN, WHITE}, 80: {WHITE, WHITE}
+		for(i=0; i < 9; ++i) {
+			for(j=0; j < 9; ++j) {
+				if(!(i == 0 && j == 0)) //do not attempt to override pair 0
+					init_pair(i*9+j, j-1, i-1);
+			}
+		}
+
+		//init_pair(30, COLOR_BLACK, -1);
+		//init_pair(31, COLOR_RED, -1);
+		//init_pair(32, COLOR_GREEN, -1);
+		//init_pair(33, COLOR_YELLOW, -1);
+		//init_pair(34, COLOR_BLUE, -1);
+		//init_pair(35, COLOR_MAGENTA, -1);
+		//init_pair(36, COLOR_CYAN, -1);
+		//init_pair(37, COLOR_WHITE, -1);
+		//init_pair(39, -1, -1);
+		//init_pair(40, -1, COLOR_BLACK);
+		//init_pair(41, -1, COLOR_RED);
+		//init_pair(42, -1, COLOR_GREEN);
+		//init_pair(43, -1, COLOR_YELLOW);
+		//init_pair(44, -1, COLOR_BLUE);
+		//init_pair(45, -1, COLOR_MAGENTA);
+		//init_pair(46, -1, COLOR_CYAN);
+		//init_pair(47, -1, COLOR_WHITE);
+		//init_pair(49, -1, -1);
 	}
 
 	noraw();
@@ -630,15 +642,11 @@ color_curses(user, colorID, isBg)
 	else
 		w->fgcolor = colorID;
 
-	if(w->fgcolor == -1 || w->bgcolor == -1) { //use a color pair preset defined on init
-		if(isBg)
-			wattron(w->win, COLOR_PAIR(colorID+40));
-		else
-			wattron(w->win, COLOR_PAIR(colorID+30));
+	if(w->fgcolor == -1 && w->bgcolor == -1) {
+			wattroff(w->win, COLOR_PAIR(0));  //  attempt to remove all color formatting with wattroff()
 	}
-	else { //init a custom color pair with the window's current fg and bg colors
-		init_pair(29, w->fgcolor, w->bgcolor);
-		wattron(w->win, COLOR_PAIR(29));
+	else { //select the color pair with the window's current fg and bg colors
+		wattron(w->win, COLOR_PAIR((w->fgcolor+1)*9+(w->bgcolor+1)));  //  Calculate the index into the pairs list instantiated in curses_start()
 	}
 }
 
@@ -655,7 +663,6 @@ format_curses(user, sgrID)
 	case 0: //Normal
 		w->fgcolor = -1;
 		w->bgcolor = -1;
-		wattron(w->win, COLOR_PAIR(39));
 		wattrset(w->win, A_NORMAL);
 		break;
 	case 1: //Bold

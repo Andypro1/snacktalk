@@ -1297,8 +1297,8 @@ process_gt:
 		}
 	}
 
-	if(formatting_used == 1)  //  reset colors for next input
-		format_term(user, 0);
+	//if(formatting_used == 1)  //  reset colors for next input
+	//	format_term(user, 0);
 
 	flush_term(user);
 }
