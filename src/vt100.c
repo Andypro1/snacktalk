@@ -304,7 +304,7 @@ vt100_process(user, data)
 				format_term(user, user->vt.av[0]);
 			}
 			else if(user->vt.av[0] == 39) { //default foreground
-				color_term(user, -1, 1);
+				color_term(user, -1, 0);
 			}
 			else if(user->vt.av[0] == 49) { //default background
 				color_term(user, -1, 1);
@@ -321,7 +321,7 @@ vt100_process(user, data)
 				color_term(user, user->vt.av[1]-40, 1);
 			}
 			else if(user->vt.av[1] == 39) { //default foreground
-				color_term(user, -1, 1);
+				color_term(user, -1, 0);
 			}
 			else if(user->vt.av[1] == 49) { //default background
 				color_term(user, -1, 1);
