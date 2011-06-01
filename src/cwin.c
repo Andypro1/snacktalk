@@ -646,7 +646,7 @@ color_curses(user, colorID, isBg)
 			wattroff(w->win, COLOR_PAIR(0));  //  attempt to remove all color formatting with wattroff()
 	}
 	else { //select the color pair with the window's current fg and bg colors
-		wattron(w->win, COLOR_PAIR((w->fgcolor+1)*9+(w->bgcolor+1)));  //  Calculate the index into the pairs list instantiated in curses_start()
+		wattron(w->win, COLOR_PAIR((w->bgcolor+1)*9+(w->fgcolor+1)));  //  Calculate the index into the pairs list instantiated in curses_start()
 	}
 }
 
