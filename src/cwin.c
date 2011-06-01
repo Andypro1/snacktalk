@@ -238,8 +238,6 @@ curses_start()
 					init_pair(i*9+j, j-1, i-1);
 			}
 		}
-
-		init_pair(81, -1, -1);  //  Make the default color pair last in the list
 	}
 
 	noraw();
@@ -626,7 +624,7 @@ color_curses(user, colorID, isBg)
 		w->fgcolor = colorID;
 
 	if(w->fgcolor == -1 && w->bgcolor == -1) {
-		wattron(w->win, COLOR_PAIR(81));
+		wattrset(w->win, A_NORMAL);  //  Just blow away all the formatting
 	}
 	else { //select the color pair with the window's current fg and bg colors
 		wattron(w->win, COLOR_PAIR((w->bgcolor+1)*9+(w->fgcolor+1)));  //  Calculate the index into the pairs list instantiated in curses_start()
