@@ -1182,6 +1182,8 @@ show_input(user, buf, len)
 	register ychar *buf;
 	register int len;
 {
+	int i;
+
 	if (user->vt.got_esc) {
 process_esc:
 		for (; len > 0; len--, buf++) {
@@ -1267,8 +1269,10 @@ process_gt:
 			case 27:	/* Escape */
 				user->vt.got_esc = 1;
 				user->vt.ac = 0;
-				user->vt.av[0] = 0;
-				user->vt.av[1] = 0;
+
+				for(i=0; i < MAXARG; ++i)
+					user->vt.av[i] = 0;
+
 				user->vt.hash = 0;
 				user->vt.lparen = 0;
 				len--, buf++;
