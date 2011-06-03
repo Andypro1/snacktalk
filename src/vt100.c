@@ -292,46 +292,35 @@ vt100_process(user, data)
 		}
 		user->vt.got_esc = 0;
 		break;
-	case 'S':		/* forward scroll */
+	case 'S':  //Scroll Up (SU)
 		scroll_term(user);
+		user->vt.got_esc = 0;
+		break;
+	case 'T':  //Scroll Down (SD)
+		rev_scroll_term(user);
 		user->vt.got_esc = 0;
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
-			if(user->vt.av[0] >= 30 && user->vt.av[0] <= 37) { //foreground color
-				color_term(user, user->vt.av[0]-30, 0);
-			}
-			else if(user->vt.av[0] >= 40 && user->vt.av[0] <= 47) { //background color
-				color_term(user, user->vt.av[0]-40, 1);
-			}
-			else if(user->vt.av[0] >= 1 && user->vt.av[0] <= 28) {
-				format_term(user, user->vt.av[0]);
-			}
-			else if(user->vt.av[0] == 39) { //default foreground
-				color_term(user, -1, 0);
-			}
-			else if(user->vt.av[0] == 49) { //default background
-				color_term(user, -1, 1);
-			}
-			else if(user->vt.av[0] == 0) { //SGR() (no arguments - reset formatting)
-				format_term(user, 0);
-			}
-
-			//  Handle second SGR() argument, if any
-			if(user->vt.av[1] >= 30 && user->vt.av[1] <= 37) { //foreground color
-				color_term(user, user->vt.av[1]-30, 0);
-			}
-			else if(user->vt.av[1] >= 40 && user->vt.av[1] <= 47) { //background color
-				color_term(user, user->vt.av[1]-40, 1);
-			}
-			else if(user->vt.av[1] == 39) { //default foreground
-				color_term(user, -1, 0);
-			}
-			else if(user->vt.av[1] == 49) { //default background
-				color_term(user, -1, 1);
-			}
-			else if(user->vt.av[1] >= 1 && user->vt.av[1] <= 28) {
-				format_term(user, user->vt.av[1]);
+			for(i=0; i < MAXARG; ++i) {
+				if(user->vt.av[i] >= 30 && user->vt.av[i] <= 37) { //foreground color
+					color_term(user, user->vt.av[i]-30, 0);
+				}
+				else if(user->vt.av[i] >= 40 && user->vt.av[i] <= 47) { //background color
+					color_term(user, user->vt.av[i]-40, 1);
+				}
+				else if(user->vt.av[i] >= 1 && user->vt.av[i] <= 28) {
+					format_term(user, user->vt.av[i]);
+				}
+				else if(user->vt.av[i] == 39) { //default foreground
+					color_term(user, -1, 0);
+				}
+				else if(user->vt.av[i] == 49) { //default background
+					color_term(user, -1, 1);
+				}
+				else if(i == 0 && user->vt.av[i] == 0) { //SGR() (no arguments - reset formatting)
+					format_term(user, 0);
+				}
 			}
 		}
 
