@@ -693,7 +693,7 @@ color_curses(user, colorID, isBg)
 {
 	register ywin *w;
 
-	w = (ywin *) (user->term);
+	w = (ywin *)(user->term);
 
 	if(isBg)
 		w->bgcolor = colorID;

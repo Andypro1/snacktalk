@@ -318,7 +318,7 @@ vt100_process(user, data)
 				else if(user->vt.av[i] == 49) { //default background
 					color_term(user, -1, 1);
 				}
-				else if(i == 0 && user->vt.av[i] == 0) { //SGR() (no arguments - reset formatting)
+				else if((i == 0) && (user->vt.av[i] == 0)) { //SGR() (no arguments - reset formatting)
 					format_term(user, 0);
 				}
 			}
