@@ -539,11 +539,13 @@ erase_above_curses(user)
 
 	for(i=0; i < user->y; ++i) {
 		//  Fill the i'th row with snacktalk's internal buffer's i'th row
-		mvwaddchstr(w->win, 0, i, user->scr[i]);
+		//  TODO: This obviously doesn't work
+		//mvwaddchstr(w->win, 0, i, user->scr[i]);
 	}
 
 	//  Fill the current row with snacktalk's internal buffer current row up to the cursor column
-	mvwaddchnstr(w->win, user->y, 0, user->scr[user->y], user->x);
+	//  TODO: This obviously doesn't work
+	//mvwaddchnstr(w->win, user->y, 0, user->scr[user->y], user->x);
 	wmove(w->win, returnRow, returnCol);  //  Restore cursor
 }
 
@@ -559,10 +561,11 @@ clear_line_curses(user, clearAll)
 	returnRow = user->y;  //  Store cursor coordinates
 	returnCol = user->x;
 
-	if(clearAll == 1)
-		mvwaddchstr(w->win, user->y, 0, user->scr[user->y]);
-	else //beginning of line only
-		mvwaddchnstr(w->win, user->y, 0, user->scr[user->y], user->x);
+	//  TODO: This obviously doesn't work
+	//if(clearAll == 1)
+	//	mvwaddchstr(w->win, user->y, 0, user->scr[user->y]);
+	//else //beginning of line only
+	//	mvwaddchnstr(w->win, user->y, 0, user->scr[user->y], user->x);
 
 	wmove(w->win, returnRow, returnCol);  //  Restore cursor
 }

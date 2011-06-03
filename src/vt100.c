@@ -216,7 +216,7 @@ vt100_process(user, data)
 	case 'J': //ED
 		if(user->vt.got_esc == 2) {
 			switch(user->vt.av[0]) {
-			case 1: //Erase Above
+			case 1: //  TODO: Erase Above
 				//  *Note: the below condition is most probably a typo.
 				//  Should be checking if user->y > 0 instead.  consider correcting later.
 				if(user->x > 0)  //fill all lines above with blanks
@@ -225,7 +225,9 @@ vt100_process(user, data)
 				//fill current line with blanks up to and including cursor column
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
 
-				erase_above_curses(user);
+				//TODO:
+				//erase_above_curses(user);
+				redraw_term(user, 0);
 				break;
 			case 2: //Erase All
 				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');  //  Clear snacktalk's user screen buffer
@@ -247,11 +249,15 @@ vt100_process(user, data)
 				break;
 			case 1:		/* clear to beginning of line */
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
-				clear_line_curses(user, 0);
+				//TODO:
+				//clear_line_curses(user, 0);
+				redraw_term(user, 0);
 				break;
 			case 2:		/* clear entire line */
 				fill_term(user, user->y, 0, user->y, user->cols - 1, ' ');
-				clear_line_curses(user, 1);
+				//TODO:
+				//clear_line_curses(user, 1);
+				redraw_term(user, 0);
 				break;
 			}
 		}
