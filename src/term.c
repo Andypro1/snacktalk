@@ -371,26 +371,32 @@ scroll_term(user)
 	register ychar *c;
 	int sy, sx;
 
-	if (user->sc_bot > user->sc_top) {
-		c = user->scr[user->sc_top];
-		for (i = user->sc_top; i < user->sc_bot; i++)
-			user->scr[i] = user->scr[i + 1];
-		user->scr[user->sc_bot] = c;
-		for (i = 0; i < user->cols; i++)
-			*(c++) = ' ';
-		if (user->rows == user->t_rows
-		    && user->cols == user->t_cols
-		    && user->sc_top == 0
-		    && user->sc_bot == user->rows - 1)
-			scroll_curses(user);
-		else
-			redraw_term(user, 0);  //TODO:  This should never be needed here.  Fix the logic.
-	} else {
-		sy = user->y;
+	if (user->sc_bot > user->sc_top) { //scroll region sanity check
+		c = user->scr[user->sc_top]; // points to top scrolling row of our screen buffer
+
+		for(i = user->sc_top; i < user->sc_bot; i++) //each scrolling row, top to bottom-1
+			user->scr[i] = user->scr[i + 1];  //  Move line pointer to the line below (effectively copy up)
+
+		user->scr[user->sc_bot] = c;  //  Bottom row points to previous top line contents
+
+		for(i = 0; i < user->cols; i++)
+			*(c++) = ' ';  //  Blank out new bottom line
+
+		scroll_curses(user);
+
+		//if(user->rows == user->t_rows		/* active region rows equal rows */
+		//    && user->cols == user->t_cols	/* active region cols equals cols */
+		//    && user->sc_top == 0			/* scroll region top is top of window */
+		//    && user->sc_bot == user->rows - 1)	/* scroll region bottom is bottom of window */
+		//	scroll_curses(user);
+		//else
+		//	redraw_term(user, 0);  //TODO:  This should never be needed here.  Fix the logic.
+	} else {  //if scroll region is a single line or improperly set, just blank out the top scrolling line
+		sy = user->y;  //  save cursor coordinates
 		sx = user->x;
 		move_term(user, user->sc_top, 0);
 		clreol_term(user);
-		move_term(user, sy, sx);
+		move_term(user, sy, sx);  //  restore cursor
 	}
 }
 

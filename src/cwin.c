@@ -600,7 +600,12 @@ scroll_curses(user)
 	 * cause an auto-scroll.  *sigh*
 	 */
 	w = (ywin *) (user->term);
+
 	scrollok(w->win, TRUE);
+
+	//  Added by ap: have curses mimick snacktalk's scrolling region
+	wsetscrreg(w->win, user->sc_top, user->sc_bot);
+
 	scroll(w->win);
 	scrollok(w->win, FALSE);
 
