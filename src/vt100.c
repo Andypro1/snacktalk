@@ -226,8 +226,6 @@ vt100_process(user, data)
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
 
 				erase_above_curses(user);
-
-				//redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
 			case 2: //Erase All
 				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');  //  Clear snacktalk's user screen buffer
@@ -249,11 +247,11 @@ vt100_process(user, data)
 				break;
 			case 1:		/* clear to beginning of line */
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
-				redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
+				clear_line_curses(user, 0);
 				break;
 			case 2:		/* clear entire line */
 				fill_term(user, user->y, 0, user->y, user->cols - 1, ' ');
-				redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
+				clear_line_curses(user, 1);
 				break;
 			}
 		}
