@@ -526,6 +526,25 @@ erase_curses(user)
 }
 
 void
+erase_above_curses(user)
+	register yuser *user;
+{
+	register ywin *w;
+	int i;
+
+	w = (ywin *)(user->term);
+
+	//  Fill all lines above with blanks
+	for(i=0; i < user->y; ++i) {
+		mvwaddchstr(w->win, 0, i, (char*)user->src[i]);  //  Fill the i'th row with snacktalk's
+														 //  internal buffer's i'th row.
+	}
+
+	//  Fill the current row with snacktalk's internal buffer current row up to the cursor column
+	mvwaddchnstr(w->win, user->y, 0, (char*)user->src[user->y], user->x);
+}
+
+void
 clreol_curses(user)
 	register yuser *user;
 {

@@ -165,7 +165,7 @@ vt100_process(user, data)
 		if (user->vt.got_esc == 2) {
 			if (user->vt.av[0] == 0)
 				move_term(user, user->y, user->x - 1);
-			else if ((int) user->vt.av[0] > user->x)
+			else if (/*(int)*/ user->vt.av[0] > user->x)
 				move_term(user, user->y, 0);
 			else
 				move_term(user, user->y, user->x - user->vt.av[0]);
@@ -217,11 +217,17 @@ vt100_process(user, data)
 		if(user->vt.got_esc == 2) {
 			switch(user->vt.av[0]) {
 			case 1: //Erase Above
-				if(user->x > 0)
+				//  *Note: the below condition is most probably a typo.
+				//  Should be checking if user->y > 0 instead.  consider correcting later.
+				if(user->x > 0)  //fill all lines above with blanks
 					fill_term(user, 0, 0, user->y - 1, user->cols - 1, ' ');
 
+				//fill current line with blanks up to and including cursor column
 				fill_term(user, user->y, 0, user->y, user->x, ' ');
-				redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
+
+				erase_above_curses(user);
+
+				//redraw_term(user, 0);  //  TODO: Remove the need for this.  BAD.
 				break;
 			case 2: //Erase All
 				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');  //  Clear snacktalk's user screen buffer

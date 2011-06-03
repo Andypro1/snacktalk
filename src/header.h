@@ -118,7 +118,7 @@ typedef struct _yuser {
 	char onend;		/* set if stomping at far right */
 	ychar old_rub;		/* my actual rub character */
 	ychar key;		/* this user's ident letter for menus */
-	int y, x;		/* current cursor position */
+	int y, x;		/* current cursor position - y is the ROW position and x is the COLUMN (confusing convention) */
 	int sy, sx;		/* saved cursor position */
 	int sc_top, sc_bot;	/* scrolling region */
 	char region_set;	/* set if using a screen region */
