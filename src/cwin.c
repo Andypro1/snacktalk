@@ -599,7 +599,7 @@ scroll_curses(user)
 	 * TRUE, then placing a character in the lower right corner will
 	 * cause an auto-scroll.  *sigh*
 	 */
-	w = (ywin *) (user->term);
+	w = (ywin *)(user->term);
 
 	scrollok(w->win, TRUE);
 
@@ -614,6 +614,36 @@ scroll_curses(user)
 	 * curses programs won't erase the bottom line properly.
 	 */
 	wmove(w->win, user->t_rows - 1, 0);
+	wclrtoeol(w->win);
+	wmove(w->win, user->y, user->x);
+}
+
+void
+rev_scroll_curses(user)
+	register yuser *user;
+{
+	register ywin *w;
+
+	/*
+	 * Curses uses busted scrolling.  In order to call scroll()
+	 * effectively, scrollok() must be TRUE.  However, if scrollok() is
+	 * TRUE, then placing a character in the lower right corner will
+	 * cause an auto-scroll.  *sigh*
+	 */
+	w = (ywin *)(user->term);
+
+	scrollok(w->win, TRUE);
+
+	//  Added by ap: have curses mimick snacktalk's scrolling region
+	wsetscrreg(w->win, user->sc_top, user->sc_bot);
+	wscrl(w->win, -1);  //  scroll down 1 line
+	scrollok(w->win, FALSE);
+
+	/*
+	 * Some curses won't leave the cursor in the same place, and some
+	 * curses programs won't erase the (top) line properly.
+	 */
+	wmove(w->win, user->sc_top, 0);
 	wclrtoeol(w->win);
 	wmove(w->win, user->y, user->x);
 }
