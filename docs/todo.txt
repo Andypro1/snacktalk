@@ -1,0 +1,3 @@
+Implement full Unicode support.  probably start by replacing all chars with W_CHAR or whatever type of thing, etc.  or sth.
+After it's ready, switch all users to en_US.UTF-8 - see locale -a
+
