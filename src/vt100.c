@@ -308,6 +308,25 @@ vt100_process(user, data)
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
+			//  Process high colors
+			if(user->vt.av[0] == 38) { //foreground color
+				if(user->vt.av[1] == 5 && user->vt.av[2] > 0) {
+					color_term(user, user->vt.av[2], 0);
+				}
+
+				user->vt.got_esc = 0;
+				break;
+			}
+			else if(user->vt.av[0] == 48) { //background color
+				if(user->vt.av[1] == 5 && user->vt.av[2] > 0) {
+					color_term(user, user->vt.av[2], 1);
+				}
+
+				user->vt.got_esc = 0;
+				break;
+			}
+
+			//  Process basic colors
 			for(i=0; i < MAXARG; ++i) {
 				if(user->vt.av[i] >= 30 && user->vt.av[i] <= 37) { //foreground color
 					color_term(user, user->vt.av[i]-30, 0);
