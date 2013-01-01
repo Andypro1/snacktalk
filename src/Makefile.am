@@ -11,6 +11,7 @@ snacktalk_SOURCES = \
 	rc.c \
 	exec.c \
 	getpty.c \
+	lrucache.c \
 	cwin.c \
 	mem.c \
 	vt100.c \

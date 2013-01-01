@@ -49,7 +49,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_snacktalk_OBJECTS = main.$(OBJEXT) term.$(OBJEXT) user.$(OBJEXT) \
 	fd.$(OBJEXT) comm.$(OBJEXT) menu.$(OBJEXT) socket.$(OBJEXT) \
-	rc.$(OBJEXT) exec.$(OBJEXT) getpty.$(OBJEXT) cwin.$(OBJEXT) \
+	rc.$(OBJEXT) exec.$(OBJEXT) getpty.$(OBJEXT) lrucache.$(OBJEXT) cwin.$(OBJEXT) \
 	mem.$(OBJEXT) vt100.$(OBJEXT) gtalk.$(OBJEXT)
 snacktalk_OBJECTS = $(am_snacktalk_OBJECTS)
 snacktalk_LDADD = $(LDADD)
@@ -156,11 +156,13 @@ snacktalk_SOURCES = \
 	rc.c \
 	exec.c \
 	getpty.c \
+	lrucache.c \
 	cwin.c \
 	mem.c \
 	vt100.c \
 	gtalk.c \
 	header.h \
+	lrucache.h \
 	cwin.h \
 	mem.h \
 	socket.h \

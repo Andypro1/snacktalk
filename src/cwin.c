@@ -32,6 +32,7 @@
 #include <signal.h>
 
 #include "cwin.h"
+#include "lrucache.h"
 
 typedef struct _ywin {
 	struct _ywin *next;		/* next ywin in linked list */
@@ -44,6 +45,9 @@ typedef struct _ywin {
 } ywin;
 
 static ywin *head;		/* head of linked list */
+
+Queue* colorPairCache;		//  LRU cache of color pairs in use
+Hash*  colorPairHash;		//  Associated hash for O(1) search
 
 char tempOrderUser[V3_NAMELEN+1];		/* stack memory for holding usernames from the forceorder option */
 
@@ -215,6 +219,7 @@ static void
 curses_start()
 {
 	char *term;
+	QNode* a;
 	if (initscr() == NULL) {
 		term = getenv("TERM");
 		fprintf(stderr, "Error opening terminal: %s.\n", (term ? term : "(null)"));
@@ -225,19 +230,34 @@ curses_start()
 		start_color();  //  Added by ap - need to start here if we want to have a chance of showing colors
 		use_default_colors();  //  avoids curses color silliness
 
+		//  Initialize the least recently used cache for COLOR_PAIRs to implement
+		//  faux 256 color support.
+		//  Cache will store 255 pairs (max supported by ncurses ABI < 6)
+     		colorPairCache = createQueue( 255 );
+
+         	//  The "pageNumbers" themselves will act as a unique hash of
+             	//  foreground and background color pair combinations (not ordered)
+                //  The QNodes will contain a bool determining if the current cache
+                //  has the fg and bgcolors ordered or if the order is flipped for
+                //  the color pair stored in the hashed pageNumber value.
+                colorPairHash = createHash( 65536 );
+
+                //a = ReferencePage(colorPairCache, colorPairHash, CombineHashFromPair(1, 0), 1<0);
+
 		//  Set curses color pairs up and map them to
 		//  the xterm Character Attributes (SGR) codes received by the shell
-		int i, j;
+//		int i, j;
 
 		//  Initialize all possible color pairs.  Term SGR values will go through
 		//  the same algorithm to pick the proper colors.  The sequence is created as follows:
 		//  1: {BLACK, default}, 2: {RED, default}, 3: {GREEN, default}, ..., 78: {MAGENTA, WHITE}, 79: {CYAN, WHITE}, 80: {WHITE, WHITE}
-		for(i=0; i < 9; ++i) {
+/*		for(i=0; i < 9; ++i) {
 			for(j=0; j < 9; ++j) {
 				if(!(i == 0 && j == 0)) //do not attempt to override pair 0
 					init_pair(i*9+j, j-1, i-1);
 			}
 		}
+		*/
 	}
 
 	noraw();
@@ -695,6 +715,7 @@ color_curses(user, colorID, isBg)
 	register int isBg;
 {
 	register ywin *w;
+	QNode* a;
 
 	w = (ywin *)(user->term);
 
@@ -707,7 +728,9 @@ color_curses(user, colorID, isBg)
 		wattrset(w->win, A_NORMAL);  //  Just blow away all the formatting
 	}
 	else { //select the color pair with the window's current fg and bg colors
-		wattron(w->win, COLOR_PAIR((w->bgcolor+1)*9+(w->fgcolor+1)));  //  Calculate the index into the pairs list instantiated in curses_start()
+		a = ReferencePage(colorPairCache, colorPairHash, CombineHashFromPair(w->fgcolor, w->bgcolor), w->fgcolor<w->bgcolor);
+		
+		wattron(w->win, COLOR_PAIR(a->pairNumber));  //  Calculate the index into the pairs list instantiated in curses_start()
 	}
 }
 
