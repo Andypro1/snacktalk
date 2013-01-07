@@ -10,7 +10,7 @@
              unsigned pageNumber;  // the page number stored in this QNode
 
                  //  Data
-	char pairNumber;
+	unsigned char pairNumber;
                      bool isFlipped;
                      } QNode;
 
@@ -30,16 +30,16 @@
                                          } Hash;
 
 
-extern QNode* newQNode(unsigned pageNumber, char pairNumber, bool isFlipped);
+extern QNode* newQNode(unsigned pageNumber, unsigned char pairNumber, bool isFlipped);
 extern Queue* createQueue(int numberOfFrames);
 extern Hash* createHash(int capacity);
 extern int AreAllFramesFull(Queue* queue);
 extern int isQueueEmpty(Queue* queue);
-extern char deQueue(Queue* queue);
+extern unsigned char deQueue(Queue* queue);
 extern void Enqueue(Queue* queue, Hash* hash, unsigned pageNumber, bool isFlipped);
 extern QNode* ReferencePage(Queue* queue, Hash* hash, unsigned pageNumber, bool isFlipped);
-extern unsigned short CombineHashFromPair(char A, char B);
-extern char GetFirstFromCombineHash(unsigned short C);
-extern char GetSecondFromCombineHash(unsigned short C);
+extern unsigned int CombineHashFromPair(short A, short B);
+extern short GetFirstFromCombineHash(unsigned int C);
+extern short GetSecondFromCombineHash(unsigned int C);
 
 #endif

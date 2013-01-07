@@ -240,7 +240,7 @@ curses_start()
                 //  The QNodes will contain a bool determining if the current cache
                 //  has the fg and bgcolors ordered or if the order is flipped for
                 //  the color pair stored in the hashed pageNumber value.
-                colorPairHash = createHash( 65536 );
+                colorPairHash = createHash( 66305 );
 
                 //a = ReferencePage(colorPairCache, colorPairHash, CombineHashFromPair(1, 0), 1<0);
 
@@ -714,7 +714,7 @@ color_curses(user, colorID, isBg)
 	register int colorID;
 	register int isBg;
 {
-	register ywin *w;
+	register ywin *w, *all;
 	QNode* a;
 
 	w = (ywin *)(user->term);
@@ -728,8 +728,43 @@ color_curses(user, colorID, isBg)
 		wattrset(w->win, A_NORMAL);  //  Just blow away all the formatting
 	}
 	else { //select the color pair with the window's current fg and bg colors
+		//  First, protect all other non-default
+		//  colors *currently* in use by all other users
+		//  but me:
+		for (all = head; all; all = all->next) {
+			if(all != w) { //not me
+				if((all->fgcolor > -1) || (all->bgcolor > -1)) {
+					ReferencePage(colorPairCache, colorPairHash, CombineHashFromPair(all->fgcolor, all->bgcolor), all->fgcolor<all->bgcolor);
+				}
+			}
+		}
+
+		//  Now request my new color
 		a = ReferencePage(colorPairCache, colorPairHash, CombineHashFromPair(w->fgcolor, w->bgcolor), w->fgcolor<w->bgcolor);
-		
+
+		//  Debug prints
+		//sprintf(errstr, "hash: %d, pair#: %d, flip: %d, w->fg: %d, w->bg: %d", a->pageNumber, a->pairNumber, a->isFlipped, w->fgcolor, w->bgcolor);
+		//show_error(errstr);
+
+		//  Add the inverse attribute when the cached pair
+		//  returned does not match the currently requested
+		//  fg and bgcolor ordering.
+		//  Added a little hack which always redefines
+		//  a returned pair on the fly if it contains a default color.
+		//  This is because default colors cannot be accurately
+		//  inversed with A_REVERSE.
+		if((w->bgcolor == -1) || (w->fgcolor == -1)) {
+			init_pair(a->pairNumber, w->fgcolor, w->bgcolor);
+		}
+		else if(w->bgcolor > w->fgcolor) {
+			if(a->isFlipped == 0)
+				wattron(w->win, A_REVERSE);
+		}
+		else {
+			if(a->isFlipped == 1)
+				wattron(w->win, A_REVERSE);
+		}
+
 		wattron(w->win, COLOR_PAIR(a->pairNumber));  //  Calculate the index into the pairs list instantiated in curses_start()
 	}
 }

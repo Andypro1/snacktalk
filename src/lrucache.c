@@ -6,7 +6,7 @@
 
 // A utility function to create a new Queue Node. The queue Node
 // will store the given 'pageNumber'
-QNode* newQNode( unsigned pageNumber, char pairNumber, bool isFlipped)
+QNode* newQNode( unsigned pageNumber, unsigned char pairNumber, bool isFlipped)
 {
     // Allocate memory and assign 'pageNumber'
     QNode* temp = (QNode *)malloc( sizeof( QNode ) );
@@ -71,9 +71,9 @@ int isQueueEmpty( Queue* queue )
 // A utility function to delete a frame from queue
 //  The pair number will be returned so the next init_pair()
 //  call knows which pair to overwrite
-char deQueue( Queue* queue )
+unsigned char deQueue( Queue* queue )
 {
-    char pairNum;
+    unsigned char pairNum;
 
     if( isQueueEmpty( queue ) )
         return;
@@ -102,7 +102,8 @@ char deQueue( Queue* queue )
 // and hash
 void Enqueue( Queue* queue, Hash* hash, unsigned pageNumber, bool isFlipped)
 {
-    char newPairNum;  //  pair number assigned internally for this new node
+    unsigned char newPairNum;  //  pair number assigned internally for this new node
+    short newFg, newBg;
 
     // If all frames are full, remove the page at the rear
     if ( AreAllFramesFull ( queue ) )
@@ -114,6 +115,12 @@ void Enqueue( Queue* queue, Hash* hash, unsigned pageNumber, bool isFlipped)
     else {
         newPairNum = queue->count + 1;
     }
+
+    newFg = isFlipped ? GetSecondFromCombineHash(pageNumber) : GetFirstFromCombineHash(pageNumber);
+    newBg = isFlipped ? GetFirstFromCombineHash(pageNumber) : GetSecondFromCombineHash(pageNumber);
+
+    //  Run curses init_pair() with new color info
+    init_pair(newPairNum, newFg, newBg);
 
     // Create a new node with given page number,
     // And add the new node to the front of queue
@@ -182,8 +189,8 @@ QNode* ReferencePage( Queue* queue, Hash* hash, unsigned pageNumber, bool isFlip
 }
 
 //  Combine hash a combinatorial pair (without regard to order)
-unsigned short CombineHashFromPair(char A, char B) {
-	char temp;
+unsigned int CombineHashFromPair(short A, short B) {
+	short temp;
 
 	//  Sort the pair, biggest first
 	if(A < B) {
@@ -192,55 +199,13 @@ unsigned short CombineHashFromPair(char A, char B) {
 		B = temp;
 	}
 
-	return A<<8 | B;
+	return ((A+1)*258)+(B+1);
 }
 
-char GetFirstFromCombineHash(unsigned short C) {
-	return C>>8;
+short GetFirstFromCombineHash(unsigned int C) {
+	return (C/258)-1;
 }
 
-char GetSecondFromCombineHash(unsigned short C) {
-	return C & 0xFF;
+short GetSecondFromCombineHash(unsigned int C) {
+	return (C%258)-1;
 }
-
-/*
-// Driver program to test above functions
-int main()
-{
-    // Let cache can hold 4 pages
-    Queue* q = createQueue( 255 );
-
-    //  The "pageNumbers" themselves will act as a unique hash of
-    //  foreground and background color pair combinations (not ordered)
-    //  The QNodes will contain a bit determining if the current cache
-    //  has the fg and bgcolors ordered or if the order is flipped for
-    //  the color pair stored in the hashed pageNumber value.
-    Hash* hash = createHash( 65536 );
-
-    // Let us refer pages 1, 2, 3, 1, 4, 5
-    QNode* a = ReferencePage( q, hash, CombineHashFromPair(1, 0), 1<0);
-    QNode* b = ReferencePage( q, hash, CombineHashFromPair(0, 1), 0<1);
-    QNode* c = ReferencePage( q, hash, CombineHashFromPair(255, 255), 255<255);
-    QNode* d = ReferencePage( q, hash, CombineHashFromPair(2, 0), 2<0);
-    QNode* e = ReferencePage( q, hash, CombineHashFromPair(3, 0), 3<0);
-    QNode* f = ReferencePage( q, hash, CombineHashFromPair(42, 57), 42<57);
-    QNode* g = ReferencePage( q, hash, CombineHashFromPair(1, 0), 1<0);
-    QNode* h = ReferencePage( q, hash, CombineHashFromPair(1, 0), 1<0);
-    QNode* i = ReferencePage( q, hash, CombineHashFromPair(1, 0), 1<0);
-    QNode* j = ReferencePage( q, hash, CombineHashFromPair(0, 1), 0<1);
-
-    // Let us print cache frames after the above referenced pages
-    printf ("%d %d ", a->pageNumber, a->isFlipped);
-    printf ("%d %d ", b->pageNumber, b->isFlipped);
-    printf ("%d %d ", c->pageNumber, c->isFlipped);
-    printf ("%d %d ", d->pageNumber, d->isFlipped);
-    printf ("%d %d ", e->pageNumber, e->isFlipped);
-    printf ("%d %d ", f->pageNumber, f->isFlipped);
-    printf ("%d %d ", g->pageNumber, g->isFlipped);
-    printf ("%d %d ", h->pageNumber, h->isFlipped);
-    printf ("%d %d ", i->pageNumber, i->isFlipped);
-    printf ("%d %d ", j->pageNumber, j->isFlipped);
-    
-    return 0;
-}
-*/
