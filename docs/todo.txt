@@ -1,3 +1,17 @@
+High priority
+
+Faux 256 color support:
+	Create stack space (In vt100?  cwinc?  elsewhere?) for a 256 pair LRU queue.  Upon terminals requesting a pair, the program will search through the queue for a matching pair, or a pair that will match when inversed.  It will return the match.  If a pair is not found, it is pushed into the queue, defined with init_pair(), and returned.
+
+	A full queue will destroy the least recently used pair when more than 256 have been allocated.
+
+	use lru cache from http://www.geeksforgeeks.org/implement-lru-cache/
+
+	Change ReferencePage() to return the pageNumber which will be the COLOR_PAIR number.
+
+	Change QNode struct to include the fgcolor and bgcolor int values, and then change the search function to look for the color combination.	
+
+Low priority - this stuff won't happen.  snacktalk vNext will be created in .NET to facilitate these items
 Implement full Unicode support.  probably start by replacing all chars with W_CHAR or whatever type of thing, etc.  or sth.
 After it's ready, switch all users to en_US.UTF-8 - see locale -a
 
