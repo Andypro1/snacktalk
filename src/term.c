@@ -509,6 +509,25 @@ tab_term(user)
 }
 
 /*
+* Reverse tab.  We use non-destructive tabs.
+*/
+void
+rev_tab_term(user)
+register yuser *user;
+{
+	int i;
+	/* Find nearest tab behind cursor and jump to it. */
+	if(user->x > 0) {
+		for(i = user->x; i > 0; --i) {
+			if(user->scr_tabs[i] == 1) {
+				move_term(user, user->y, i);
+				break;
+			}
+		}
+	}
+}
+
+/*
  * Process a line feed.
  */
 void

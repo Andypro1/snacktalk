@@ -306,6 +306,10 @@ vt100_process(user, data)
 		rev_scroll_term(user);
 		user->vt.got_esc = 0;
 		break;
+	case 'Z': //Cursor Backward Tabulation Ps tab stops (default = 1) (CBT).
+		rev_tab_term(user);
+		user->vt.got_esc = 0;
+		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
 			//  Process high colors
