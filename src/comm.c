@@ -1358,7 +1358,7 @@ my_input(user, buf, len)
 						bail(0);
 					else if (*buf == '\r')	/* CR */
 						*buf = '\n';
-					else if (*buf == 27)	/* Esc */
+					else if (*buf == 27 && len == 1)	/* standalone ESC */
 						break;
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
 						break;
