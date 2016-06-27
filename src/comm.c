@@ -1348,6 +1348,9 @@ my_input(user, buf, len)
 
 			while (len > 0) {
 				c = buf;
+
+				//  This loop merely *checks* for the existence of
+				//  backspace chars, ctrl+c, carraige returns, ESCapes, and ctrl+L or ctrl+R's
 				for (; len > 0; buf++, len--) {
 					if (*buf == me->old_rub || *buf == 8 || *buf == 0x7f)
 						*buf = me->RUB;
@@ -1360,7 +1363,15 @@ my_input(user, buf, len)
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
 						break;
 				}
+
+				//  This crappy section creates a new temp buffer
+				//  for further processing
+				//  if buf has been (partially) processed above
+				//  thereby changing buffer buf and buffer c so that they
+				//  are no longer the same (?)  These are both memory addresses,
+				//  and I really have no idea how i is evaluated below.
 				if ((i = buf - c) > 0) {
+					//  This only changes buffer n if it includes a newline
 					for (n = nbuf, j = 0; j < (buf - c); n++, j++) {
 						if (c[j] == '\n') {
 							*(n++) = '\r';
@@ -1368,10 +1379,14 @@ my_input(user, buf, len)
 						} else
 							*n = c[j];
 					}
+
+					//  And now nbuf of length j is sent/drawn for all users
 					j = (n - nbuf);
 					show_input(me, nbuf, j);
 					send_users(user, c, i, nbuf, j);
 				}
+
+
 				if (len > 0) {	/* we broke for a special char */
 					if (*buf == 27)	/* ESC */
 						break;
