@@ -49,6 +49,9 @@ vt100_process(user, data)
 	case '[':
 		user->vt.got_esc = 2;
 		break;
+	case 0x9b:
+		user->vt.got_esc = 2;
+		break;
 	case '?':
 		if (user->vt.got_esc == 2)
 			user->vt.got_esc = 3;
