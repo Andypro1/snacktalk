@@ -1267,6 +1267,7 @@ process_gt:
 					newline_term(user);
 				break;
 			case 27:	/* Escape */
+			case 0x9b:
 				user->vt.got_esc = 1;
 				user->vt.ac = 0;
 
