@@ -344,11 +344,14 @@ vt100_process(user, data)
 					if(newColor != NULL) {
 						int fgOrBg         = user->vt.av[i];
 						int rgbOrTable     = user->vt.av[++i];
+						int rOrKey         = user->vt.av[++i];
+						int g              = user->vt.av[++i];
+						int b              = user->vt.av[++i];
 
 						if(rgbOrTable == 2) //rgb
-							sprintf(newColor, "\033[%d;2;%d;%d;%dm", fgOrBg, user->vt.av[++i], user->vt.av[++i], user->vt.av[++i]);
+							sprintf(newColor, "\033[%d;2;%d;%d;%dm", fgOrBg, rOrKey, g, b);
 						else //color lookup table
-							sprintf(newColor, "\033[%d;5;%dm", fgOrBg, user->vt.av[++i]);
+							sprintf(newColor, "\033[%d;5;%dm", fgOrBg, rOrKey);
 
 						//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
 						//  operations because we aren't manipulating the cursor or window)
