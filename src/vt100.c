@@ -320,7 +320,7 @@ vt100_process(user, data)
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
 			//  Process formatting commands and colors
-			for(i=0; i < MAXARG; ++i) {
+			for(i=0; i < user->vt.ac; ++i) {
 				if(user->vt.av[i] >= 30 && user->vt.av[i] <= 37) { //basic foreground color
 					color_term(user, user->vt.av[i]-30, 0);
 				}
@@ -344,19 +344,15 @@ vt100_process(user, data)
 					if(newColor != NULL) {
 						int fgOrBg         = user->vt.av[i];
 						int rgbOrTable     = user->vt.av[++i];
-						int rOrKey         = user->vt.av[++i];
-						int g              = user->vt.av[++i];
-						int b              = user->vt.av[++i];
 
 						if(rgbOrTable == 2) //rgb
-							sprintf(newColor, "\033[%d;2;%d;%d;%dm", fgOrBg, rOrKey, g, b);
+							sprintf(newColor, "\033[%d;2;%d;%d;%dm", fgOrBg, user->vt.av[++i], user->vt.av[++i], user->vt.av[++i]);
 						else //color lookup table
-							sprintf(newColor, "\033[%d;5;%dm", fgOrBg, rOrKey);
+							sprintf(newColor, "\033[%d;5;%dm", fgOrBg, user->vt.av[++i]);
 
 						//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
 						//  operations because we aren't manipulating the cursor or window)
 						rawout_term(user, newColor);
-
 						free(newColor);
 					}
 				}
