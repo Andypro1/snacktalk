@@ -347,7 +347,7 @@ vt100_process(user, data)
 
 					//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
 					//  operations because we aren't manipulating the cursor or window)
-					printf(newColor);
+					rawout_term(user, newColor);
 				}
 				else if((i == 0) && (user->vt.av[i] == 0)) { //SGR() (no arguments - reset formatting)
 					format_term(user, 0);

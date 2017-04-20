@@ -709,6 +709,15 @@ redisplay_curses()
 }
 
 void
+rawout_curses(user, str)
+	register yuser *user;
+	register char *str;
+{
+	puts(str);
+	fflush(stdout);
+}
+
+void
 color_curses(user, colorID, isBg)
 	register yuser *user;
 	register int colorID;

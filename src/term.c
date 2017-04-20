@@ -1278,6 +1278,14 @@ color_term(user, colorID, isBg)
 	color_curses(user, colorID, isBg);
 }
 
+void
+rawout_term(user, str)
+	yuser *user;
+	char *str;
+{
+	rawout_curses(user, str);
+}
+
 //  Apply curses formatting through SGR() commands
 void
 format_term(user, sgrID)
