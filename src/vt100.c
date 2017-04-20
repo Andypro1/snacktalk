@@ -338,16 +338,23 @@ vt100_process(user, data)
 				}
 				else if(user->vt.av[i] == 38 || user->vt.av[i] == 48) { //high (256) color or truecolor
 					char* newColor;
-					int isRGBspecified = user->vt.av[1] == 2  ? 1 : 0;
 
-					if(isRGBspecified == 1)
-						sprintf(newColor, "\x1b[%d;2;%d;%d;%dm", user->vt.av[0], user->vt.av[2], user->vt.av[3], user->vt.av[4]);
-					else
-						sprintf(newColor, "\x1b[%d;5;%dm", user->vt.av[0], user->vt.av[2]);
+					newColor = malloc(51);
 
-					//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
-					//  operations because we aren't manipulating the cursor or window)
-					rawout_term(user, newColor);
+					if(newColor != NULL) {
+						int isRGBspecified = user->vt.av[1] == 2 ? 1 : 0;
+
+						if (isRGBspecified == 1)
+							sprintf(newColor, "\x1b[%d;2;%d;%d;%dm", user->vt.av[0], user->vt.av[2], user->vt.av[3], user->vt.av[4]);
+						else
+							sprintf(newColor, "\x1b[%d;5;%dm", user->vt.av[0], user->vt.av[2]);
+
+						//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
+						//  operations because we aren't manipulating the cursor or window)
+						rawout_term(user, newColor);
+
+						free(newColor);
+					}
 				}
 				else if((i == 0) && (user->vt.av[i] == 0)) { //SGR() (no arguments - reset formatting)
 					format_term(user, 0);
