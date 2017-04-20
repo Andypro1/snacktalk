@@ -320,7 +320,7 @@ vt100_process(user, data)
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
 			//  Process formatting commands and colors
-			for(i=0; i < user->vt.ac; ++i) {
+			for(int i=0; i < user->vt.ac; ++i) {
 				if(user->vt.av[i] >= 30 && user->vt.av[i] <= 37) { //basic foreground color
 					color_term(user, user->vt.av[i]-30, 0);
 				}
