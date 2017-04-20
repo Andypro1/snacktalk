@@ -713,7 +713,7 @@ rawout_curses(user, str)
 	register yuser *user;
 	register char *str;
 {
-	puts(str);
+	printf(str);
 	fflush(stdout);
 }
 

@@ -99,7 +99,7 @@ typedef struct {
 	char pad[44];		/* zeroed out */
 } y_parm;
 
-#define MAXARG	4		/* max ESC sequence arg count */
+#define MAXARG	100		/* max ESC sequence arg count */
 
 typedef struct _yuser {
 	struct _yuser *next;	/* next user in group lists */
