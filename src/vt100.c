@@ -46,6 +46,10 @@ vt100_process(user, data)
 		if (user->vt.ac < MAXARG - 1)
 			user->vt.av[++(user->vt.ac)] = 0;
 		break;
+	case ':':	/* Alternate multi param (Pm) arg separator */
+		if (user->vt.ac < MAXARG - 1)
+			user->vt.av[++(user->vt.ac)] = 0;
+		break;
 	case '[':
 		user->vt.got_esc = 2;
 		break;
@@ -315,33 +319,15 @@ vt100_process(user, data)
 		break;
 	case 'm':  //Character Attributes (SGR) - Added by ap 2011-05-18
 		if(user->vt.got_esc == 2) {
-			//  Process high colors
-			if(user->vt.av[0] == 38) { //foreground color
-				if(user->vt.av[1] == 5 && user->vt.av[2] > 0) {
-					color_term(user, user->vt.av[2], 0);
-				}
-
-				user->vt.got_esc = 0;
-				break;
-			}
-			else if(user->vt.av[0] == 48) { //background color
-				if(user->vt.av[1] == 5 && user->vt.av[2] > 0) {
-					color_term(user, user->vt.av[2], 1);
-				}
-
-				user->vt.got_esc = 0;
-				break;
-			}
-
-			//  Process basic colors
+			//  Process formatting commands and colors
 			for(i=0; i < MAXARG; ++i) {
-				if(user->vt.av[i] >= 30 && user->vt.av[i] <= 37) { //foreground color
+				if(user->vt.av[i] >= 30 && user->vt.av[i] <= 37) { //basic foreground color
 					color_term(user, user->vt.av[i]-30, 0);
 				}
-				else if(user->vt.av[i] >= 40 && user->vt.av[i] <= 47) { //background color
+				else if(user->vt.av[i] >= 40 && user->vt.av[i] <= 47) { //basic background color
 					color_term(user, user->vt.av[i]-40, 1);
 				}
-				else if(user->vt.av[i] >= 1 && user->vt.av[i] <= 28) {
+				else if(user->vt.av[i] >= 1 && user->vt.av[i] <= 28) { //basic formatting command
 					format_term(user, user->vt.av[i]);
 				}
 				else if(user->vt.av[i] == 39) { //default foreground
@@ -349,6 +335,21 @@ vt100_process(user, data)
 				}
 				else if(user->vt.av[i] == 49) { //default background
 					color_term(user, -1, 1);
+				}
+				else if(user->vt.av[i] == 38 || user->vt.av[i] == 48) { //high (256) color or truecolor
+					//  Determine if we're setting foreground or background and which specification mode is used
+					int isBg           = user->vt.av[0] == 48 ? TRUE : FALSE;
+					int isRGBspecified = user->vt.av[1] == 2  ? TRUE : FALSE;
+					char* newColor;
+
+					if(isRGBspecified == TRUE)
+						sprintf(newColor, "\x1b[%d;2;%d;%d;%dm", user->vt.av[2], user->vt.av[3], user->vt.av[4]);
+					else
+						sprintf(newColor, "\x1b[%d;5;%dm", user->vt.av[2]);
+
+					//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
+					//  operations because we aren't manipulating the cursor or window)
+					printf(newColor);
 				}
 				else if((i == 0) && (user->vt.av[i] == 0)) { //SGR() (no arguments - reset formatting)
 					format_term(user, 0);
