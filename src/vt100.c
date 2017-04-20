@@ -337,15 +337,13 @@ vt100_process(user, data)
 					color_term(user, -1, 1);
 				}
 				else if(user->vt.av[i] == 38 || user->vt.av[i] == 48) { //high (256) color or truecolor
-					//  Determine if we're setting foreground or background and which specification mode is used
-					int isBg           = user->vt.av[0] == 48 ? TRUE : FALSE;
-					int isRGBspecified = user->vt.av[1] == 2  ? TRUE : FALSE;
 					char* newColor;
+					int isRGBspecified = user->vt.av[1] == 2  ? 1 : 0;
 
-					if(isRGBspecified == TRUE)
-						sprintf(newColor, "\x1b[%d;2;%d;%d;%dm", user->vt.av[2], user->vt.av[3], user->vt.av[4]);
+					if(isRGBspecified == 1)
+						sprintf(newColor, "\x1b[%d;2;%d;%d;%dm", user->vt.av[0], user->vt.av[2], user->vt.av[3], user->vt.av[4]);
 					else
-						sprintf(newColor, "\x1b[%d;5;%dm", user->vt.av[2]);
+						sprintf(newColor, "\x1b[%d;5;%dm", user->vt.av[0], user->vt.av[2]);
 
 					//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
 					//  operations because we aren't manipulating the cursor or window)
