@@ -355,6 +355,7 @@ vt100_process(user, data)
 
 						//  Bypass ncurses and write raw termcode (this shouldn't affect future ncurses
 						//  operations because we aren't manipulating the cursor or window)
+						flush_term(user);  //  Flush ncurses output before writing to stdout
 						rawout_term(user, newColor);
 						free(newColor);
 					}
