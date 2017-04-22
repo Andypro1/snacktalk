@@ -649,16 +649,14 @@ register yuser *user;
 	register ywin *w;
 
 	w = (ywin *)(user->term);
-	wsetscrreg(w->win, user->sc_top, user->sc_bot);
-
-	flush_curses(user);  //  Flush curses output including, hopefully, the new screen region
 
 	char* scrollCode;
 
-	scrollCode = malloc(11);
+	scrollCode = malloc(31);
 
 	if(scrollCode != NULL) {
-		sprintf(scrollCode, "\033[S");
+		//  Set scroll region to user's window scroll region; issue scroll, reset scroll region
+		sprintf(scrollCode, "\033[%d;%dr\033[S\033[r", user->sc_top, user->sc_bot);
 
 		//  Bypass ncurses and write raw termcode
 		flush_curses(user);  //  Flush ncurses output before writing to stdout
