@@ -626,7 +626,7 @@ scroll_curses(user)
 
 	scrollok(w->win, TRUE);
 
-	//  Added by ap: have curses mimick snacktalk's scrolling region
+	//  Added by ap: have curses mimic snacktalk's scrolling region
 	wsetscrreg(w->win, user->sc_top, user->sc_bot);
 
 	scroll(w->win);
@@ -648,6 +648,9 @@ register yuser *user;
 {
 	register ywin *w;
 
+	//  TODO: Cannot output a raw code that goes out to all clients since
+	//  the scroll code depends on where the window in question is on each client.
+
 	w = (ywin *)(user->term);
 
 	char* scrollCode;
@@ -656,7 +659,7 @@ register yuser *user;
 
 	if(scrollCode != NULL) {
 		//  Set scroll region to user's window scroll region; issue scroll, reset scroll region
-		sprintf(scrollCode, "\033[%d;%dr\033[S\033[r", user->sc_top, user->sc_bot);
+		sprintf(scrollCode, "\033[%d;%dr\033[S\033[r", w->row + 1, w->row + w->height - 1);
 
 		//  Bypass ncurses and write raw termcode
 		flush_curses(user);  //  Flush ncurses output before writing to stdout

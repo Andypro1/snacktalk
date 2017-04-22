@@ -110,7 +110,7 @@ typedef struct _yuser {
 	ychar edit[4];		/* edit characters */
 	char crlf;		/* 1 if user wants CRLF newlines */
 	u_short t_rows, t_cols;	/* his rows and cols on window over here */
-	u_short rows, cols;	/* his active region rows and cols over here (ap: his scrolling region?? maybe?) */
+	u_short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
 	ychar **scr;		/* screen data */
 	char *scr_tabs;		/* screen tab positions */
