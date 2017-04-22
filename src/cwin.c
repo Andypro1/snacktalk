@@ -641,6 +641,33 @@ scroll_curses(user)
 	wmove(w->win, user->y, user->x);
 }
 
+
+void
+scroll_curses_optimized(user)
+register yuser *user;
+{
+	register ywin *w;
+
+	w = (ywin *)(user->term);
+	wsetscrreg(w->win, user->sc_top, user->sc_bot);
+
+	flush_curses(user);  //  Flush curses output including, hopefully, the new screen region
+
+	char* scrollCode;
+
+	scrollCode = malloc(11);
+
+	if(scrollCode != NULL) {
+		sprintf(scrollCode, "\033[S");
+
+		//  Bypass ncurses and write raw termcode
+		flush_curses(user);  //  Flush ncurses output before writing to stdout
+		rawout_curses(user, scrollCode);
+		free(scrollCode);
+	}
+}
+
+
 void
 rev_scroll_curses(user)
 	register yuser *user;

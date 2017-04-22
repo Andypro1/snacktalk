@@ -382,7 +382,8 @@ scroll_term(user)
 		for(i = 0; i < user->cols; i++)
 			*(c++) = ' ';  //  Blank out new bottom line
 
-		scroll_curses(user);
+		//scroll_curses(user);
+		scroll_curses_optimized(user);
 	} else { //if scroll region is a single line or improperly set, just blank out the top scrolling line
 		sy = user->y;  //  save cursor coordinates
 		sx = user->x;
