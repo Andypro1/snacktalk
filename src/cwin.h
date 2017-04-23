@@ -27,6 +27,8 @@ extern void move_curses( /* yuser, y, x */ );
 extern void clreol_curses( /* yuser */ );
 extern void clreos_curses( /* yuser */ );
 extern void scroll_curses( /* yuser */ );
+extern void scroll_curses_optimized( /* yuser */);
+extern void rawout_curses( /* yuser, str */);
 extern void keypad_curses( /* bool */ );
 extern void flush_curses( /* yuser */ );
 extern void redisplay_curses();
