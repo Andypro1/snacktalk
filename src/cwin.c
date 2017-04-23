@@ -650,6 +650,10 @@ register yuser *user;
 
 	w = (ywin *)(user->term);
 
+	//  Save user's cursor position
+	user->sy = user->y;
+	user->sx = user->x;
+
 	char* scrollCode;
 
 	scrollCode = malloc(31);
@@ -663,13 +667,8 @@ register yuser *user;
 		free(scrollCode);
 	}
 
-	/*
-	* Some curses won't leave the cursor in the same place, and some
-	* curses programs won't erase the bottom line properly.
-	*/
-	wmove(w->win, user->t_rows - 1, 0);
-	wclrtoeol(w->win);
-	wmove(w->win, user->y, user->x);
+	//  Restore user's cursor position
+	move_curses(user, user->sy, user->sx);
 }
 
 
