@@ -650,9 +650,14 @@ register yuser *user;
 
 	w = (ywin *)(user->term);
 
-	//  Save user's cursor position
-	user->sy = user->y;
-	user->sx = user->x;
+	scrollok(w->win, TRUE);
+
+	//  Added by ap: have curses mimic snacktalk's scrolling region
+	wsetscrreg(w->win, user->sc_top, user->sc_bot);
+
+	////  Save user's cursor position
+	//user->sy = user->y;
+	//user->sx = user->x;
 
 	char* scrollCode;
 
@@ -667,8 +672,10 @@ register yuser *user;
 		free(scrollCode);
 	}
 
-	//  Restore user's cursor position
-	move_curses(user, user->sy, user->sx);
+	scrollok(w->win, FALSE);
+
+	////  Restore user's cursor position
+	//move_curses(user, user->sy, user->sx);
 }
 
 
