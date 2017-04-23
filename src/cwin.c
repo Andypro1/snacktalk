@@ -663,6 +663,14 @@ register yuser *user;
 		rawout_curses(user, scrollCode);
 		free(scrollCode);
 	}
+
+	/*
+	* Some curses won't leave the cursor in the same place, and some
+	* curses programs won't erase the bottom line properly.
+	*/
+	wmove(w->win, user->t_rows - 1, 0);
+	wclrtoeol(w->win);
+	wmove(w->win, user->y, user->x);
 }
 
 
