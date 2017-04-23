@@ -659,7 +659,6 @@ register yuser *user;
 		sprintf(scrollCode, "\033[%d;%dr\033[S\033[r", w->row + 1, w->row + w->height);
 
 		//  Bypass ncurses and write raw termcode
-		flush_curses(user);  //  Flush ncurses output before writing to stdout
 		rawout_curses(user, scrollCode);
 		free(scrollCode);
 	}
@@ -746,6 +745,7 @@ rawout_curses(user, str)
 	register yuser *user;
 	register char *str;
 {
+	flush_curses(user);  //  Flush ncurses output before writing to stdout
 	printf(str);
 	fflush(stdout);
 }
