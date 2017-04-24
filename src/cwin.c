@@ -666,23 +666,24 @@ register yuser *user;
 		//  Bypass ncurses and write raw termcode
 		rawout_curses(user, scrollCode);
 
-		sprintf(scrollCode, "t_rows: %d", user->t_rows);
+		sprintf(scrollCode, "x,y:%d,%d", user->t_rows);
+		rawout_curses(user, scrollCode);
+
+		/*
+		* Some curses won't leave the cursor in the same place, and some
+		* curses programs won't erase the bottom line properly.
+		*/
+		wmove(w->win, user->t_rows - 1, 0);
+		wclrtoeol(w->win);
+		wmove(w->win, user->y, user->x);
+
+		sprintf(scrollCode, "xa,ya:%d,%d", user->t_rows);
 		rawout_curses(user, scrollCode);
 
 		free(scrollCode);
 	}
-
+	 
 //	scrollok(w->win, FALSE);
-
-
-
-	/*
-	* Some curses won't leave the cursor in the same place, and some
-	* curses programs won't erase the bottom line properly.
-	*/
-	wmove(w->win, user->t_rows - 1, 0);
-	wclrtoeol(w->win);
-	wmove(w->win, user->y, user->x);
 }
 
 
