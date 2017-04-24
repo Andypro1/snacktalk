@@ -666,7 +666,7 @@ register yuser *user;
 		//  Bypass ncurses and write raw termcode
 		rawout_curses(user, scrollCode);
 
-		sprintf(scrollCode, "x,y:%d,%d", user->t_rows);
+		sprintf(scrollCode, "x,y:%d,%d", user->y, user->x);
 		rawout_curses(user, scrollCode);
 
 		/*
@@ -677,7 +677,7 @@ register yuser *user;
 		wclrtoeol(w->win);
 		wmove(w->win, user->y, user->x);
 
-		sprintf(scrollCode, "xa,ya:%d,%d", user->t_rows);
+		sprintf(scrollCode, "xa,ya:%d,%d", user->y, user->x);
 		rawout_curses(user, scrollCode);
 
 		free(scrollCode);
