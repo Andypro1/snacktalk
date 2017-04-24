@@ -650,10 +650,10 @@ register yuser *user;
 
 	w = (ywin *)(user->term);
 
-	scrollok(w->win, TRUE);
+//	scrollok(w->win, TRUE);
 
 	//  Added by ap: have curses mimic snacktalk's scrolling region
-	wsetscrreg(w->win, user->sc_top, user->sc_bot);
+//	wsetscrreg(w->win, user->sc_top, user->sc_bot);
 
 	char* scrollCode;
 
@@ -665,10 +665,16 @@ register yuser *user;
 
 		//  Bypass ncurses and write raw termcode
 		rawout_curses(user, scrollCode);
+
+		sprintf(scrollCode, "t_rows: %d", user->t_rows);
+		rawout_curses(user, scrollCode);
+
 		free(scrollCode);
 	}
 
-	scrollok(w->win, FALSE);
+//	scrollok(w->win, FALSE);
+
+
 
 	/*
 	* Some curses won't leave the cursor in the same place, and some
