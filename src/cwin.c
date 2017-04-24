@@ -661,12 +661,11 @@ register yuser *user;
 
 	if(scrollCode != NULL) {
 		//  Set scroll region to user's window scroll region; issue scroll, reset scroll region
-		sprintf(scrollCode, "\033[%d;%dr\033[%d;1H\n\033[1;%dr\033[%d;1H", w->row + 1, w->row + w->height, w->row + w->height, LINES, w->row + w->height);
+		//sprintf(scrollCode, "\033[%d;%dr\033[%d;1H\n\033[1;%dr\033[%d;1H", w->row + 1, w->row + w->height, w->row + w->height, LINES, w->row + w->height);
+		sprintf(scrollCode, "\033[%d;%dr\n\033[1;%dr\033[%d;1H", w->row + 1, w->row + w->height, LINES, w->row + w->height);
+
 
 		//  Bypass ncurses and write raw termcode
-		rawout_curses(user, scrollCode);
-
-		sprintf(scrollCode, "x,y:%d,%d", user->y, user->x);
 		rawout_curses(user, scrollCode);
 
 		/*
@@ -676,9 +675,6 @@ register yuser *user;
 		wmove(w->win, user->t_rows - 1, 0);
 		wclrtoeol(w->win);
 		wmove(w->win, user->y, user->x);
-
-		sprintf(scrollCode, "xa,ya:%d,%d", user->y, user->x);
-		rawout_curses(user, scrollCode);
 
 		free(scrollCode);
 	}
